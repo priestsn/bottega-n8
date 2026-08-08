@@ -3,6 +3,7 @@
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initAnimeSplit } from './anime-split';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,47 +89,13 @@ function initParallax() {
 
 // --- Progress: gestito dal componente ScrollEight (motivo 8/infinito).
 
-// --- Split text: titoli [data-split] rivelati parola per parola
-// Usa SplitText se disponibile, altrimenti fallback manuale su parole.
-function initSplitText() {
-  // In reduced-motion o se GSAP non c'è, assicura che i titoli [data-split] siano visibili
-  if (reduced || !window.gsap) {
-    document.querySelectorAll('[data-split]').forEach((el) => {
-      el.style.opacity = '1';
-    });
-    return;
-  }
-  document.querySelectorAll('[data-split]').forEach((el) => {
-    if (el.dataset.splitHandled) return;
-    el.dataset.splitHandled = 'true';
-
-    // Raccogli parole (rispetta i <br> come separatori di riga)
-    const html = el.innerHTML;
-    const words = html.split(' ').map((w, i) =>
-      `<span class="inline-block overflow-hidden align-bottom" style="display:inline-block;vertical-align:bottom;"><span class="split-word inline-block will-change-transform" style="display:inline-block;transform:translateY(110%);">${w}</span></span>`
-    ).join(' ');
-    el.innerHTML = words;
-    el.style.opacity = '1';
-
-    const inner = el.querySelectorAll('.split-word');
-    gsap.to(inner, {
-      y: 0,
-      duration: 1,
-      stagger: 0.045,
-      ease: 'power4.out',
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 85%',
-        once: true,
-      },
-    });
-  });
-}
+// --- Split text: gestito da anime.js v4 (TextSplitter) in anime-split.js
+// Qui NON tocchiamo più i [data-split] per evitare doppia animazione.
 
 function runAll() {
   initReveals();
   initParallax();
-  initSplitText();
+  initAnimeSplit();
   // Smooth-scroll per tutti gli anchor interni
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     if (lenis) {

@@ -3,44 +3,44 @@ interface Props { id?: string; }
 const { id = 'menu' } = Astro.props;
 const dishes = [
   {
-    name: 'Ombrina o bovino allo zenzero',
-    cat: 'Ravioli al vapore',
-    desc: 'Ravioli fatti a mano con ripieno di ombrina delicata o manzo profumato allo zenzero fresco, cotti al vapore nel cestello di bambù.',
-    img: '/photos/ravioli-xlb.jpg',
-    alt: 'Ravioli al vapore nel cestello di bambù, la specialità di Bottega N.8',
+    name: 'La sala',
+    cat: 'Il locale',
+    desc: 'Un ambiente caldo e raccolto, tavoli in legno e luce soffusa: il posto giusto per assaporare con calma.',
+    img: '/photos/interior-1.jpg',
+    alt: 'La sala di Bottega N.8, tavoli in legno e illuminazione calda',
   },
   {
-    name: 'Solo di pesce',
-    cat: 'Ramen',
-    desc: 'Brodo cristallino di pesce, ramen artigianali, fettine di pesce crudo scottato dal brodo bollente, cipollotto fresco.',
-    img: '/photos/real-ramen-1.jpg',
-    alt: 'Ciotola di ramen con brodo caldo, foto reale di Bottega N.8',
+    name: 'Il bancone',
+    cat: 'Il locale',
+    desc: 'Il cuore della bottega: dove i piatti nascono al vapore e arrivano in tavola fumanti.',
+    img: '/photos/interior-bancone.jpg',
+    alt: 'Il bancone di Bottega N.8',
   },
   {
-    name: 'Ragù e funghi shiitake',
-    cat: 'Sticky rice',
-    desc: 'Riso glutinoso cotto lentamente con ragù aromatico e funghi shiitake saltati, servito nel tradizionale contenitore in terracotta.',
-    img: '/photos/real-dimsum-1.jpg',
-    alt: 'Dim sum nel cestello di bambù, foto reale di Bottega N.8',
+    name: 'Tavoli e atmosfera',
+    cat: 'Il locale',
+    desc: 'Dettagli, materiali e un\u2019atmosfera pensata per farvi sentire a casa, lontano da casa.',
+    img: '/photos/interior-tavoli.jpg',
+    alt: 'I tavoli e l\u2019atmosfera di Bottega N.8',
   },
   {
-    name: 'Brodo di manzo e carpaccio scottato',
-    cat: 'Phở',
-    desc: 'Brodo di manzo chiarificato 12 ore, tagliatelle di riso, carpaccio di manzo che cuoce nel brodo bollente, erbe fresche, germogli, lime.',
-    img: '/photos/real-ramen-2.jpg',
-    alt: 'Ciotola di phở con carne e erbe fresche, foto reale di Bottega N.8',
+    name: 'La sala, di lato',
+    cat: 'Il locale',
+    desc: 'Spazi curati nei minimi dettagli, dove ogni cena diventa un piccolo viaggio di gusto.',
+    img: '/photos/interior-sala.jpg',
+    alt: 'La sala di Bottega N.8 vista di lato',
   },
 ];
 ---
 
-<section id={id} class="relative w-full overflow-hidden bg-nero" data-st-section>
+<section id={id} class="relative w-full overflow-hidden bg-antracite" data-st-section>
   <!-- Header -->
   <div class="mx-auto max-w-7xl px-6 pt-20 md:pt-28">
     <div class="text-center">
-      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>La nostra cucina</span>
-      <h2 class="mt-4 font-anton text-[clamp(2.4rem,7vw,5rem)] uppercase text-crema" data-reveal data-delay="0.1">Il nostro menu</h2>
+      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>Vieni a trovarci</span>
+      <h2 class="mt-4 font-anton text-[clamp(2.4rem,7vw,5rem)] uppercase text-crema" data-reveal data-delay="0.1">Il nostro locale</h2>
       <p class="mx-auto mt-6 max-w-2xl font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-crema/60" data-reveal data-delay="0.2">
-        Piatti autentici e originali, nati da ingredienti selezionati e dalla ricerca costante dell'armonia tra gusto e creatività.
+        Un ambiente caldo e raccolto, dove ogni piatto nasce al vapore. Scopri l'atmosfera della bottega.
       </p>
     </div>
   </div>

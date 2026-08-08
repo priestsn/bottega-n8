@@ -3,7 +3,7 @@
 // Cambia contrasto in base alla sezione attiva (chiara/scura).
 const links = [
   { href: '#storia', label: 'Storia' },
-  { href: '#menu', label: 'Menu' },
+  { href: '#locale', label: 'Il locale' },
   { href: '#tavolo-takeaway', label: 'Tavolo o Take Away' },
   { href: '#stampa', label: 'Stampa' },
   { href: '#dove-siamo', label: 'Dove Siamo' },
@@ -89,7 +89,7 @@ const links = [
     });
 
     // Contrasto in base alla sezione attiva
-    const darkSections = ['hero', 'filosofia', 'menu', 'dove-siamo', 'chiusura'];
+    const darkSections = ['hero', 'filosofia', 'locale', 'dove-siamo', 'chiusura'];
     ScrollTrigger.create({
       start: 0,
       end: 'max',
@@ -97,7 +97,7 @@ const links = [
         const y = self.scroll();
         let active = 'hero';
         // Trova la sezione in cui ci troviamo
-        for (const s of ['storia', 'filosofia', 'menu', 'tavolo-takeaway', 'dove-siamo', 'chiusura']) {
+        for (const s of ['storia', 'filosofia', 'locale', 'tavolo-takeaway', 'dove-siamo', 'chiusura']) {
           const el = document.getElementById(s);
           if (el && el.offsetTop <= y + 120) active = s;
         }
