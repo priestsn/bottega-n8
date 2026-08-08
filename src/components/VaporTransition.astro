@@ -1,40 +1,50 @@
 ---
 // VaporTransition — transizione "nuvola di vapore" tra Hero (scura) e Storia (chiara).
-// Riservata al primo passaggio chiave: pin della sezione in uscita + blur + vapore
-// che sale a piena opacità e poi si dirada rivelando la sezione successiva.
-// Scrub-driven (ScrollTrigger), NON ripetuta sugli altri confini (performance mobile).
+// Riservata al primo passaggio chiave: una coltre di vapore che sale, satura
+// lo schermo e si dirada rivelando la sezione successiva nitida. Scrub-driven.
 interface Props {
   targetSectionId?: string; // id della sezione che segue (quella da rivelare)
 }
 const { targetSectionId = 'storia' } = Astro.props;
+const blobs = Array.from({ length: 5 });
 ---
 <div
-  class="vapor-transition pointer-events-none relative z-[8] h-[120vh] w-full overflow-hidden"
+  class="vapor-transition pointer-events-none relative z-[8] h-[100vh] w-full overflow-hidden bg-nero"
   data-vapor-transition
   data-target={targetSectionId}
   aria-hidden="true"
 >
-  <!-- Vapore che sale e si dirada -->
+  <!-- Vapore che sale e satura -->
   <div class="vapor-transition-layer absolute inset-0">
-    <div class="vapor-transition-blob" data-vt-blob="1"></div>
-    <div class="vapor-transition-blob" data-vt-blob="2"></div>
-    <div class="vapor-transition-blob" data-vt-blob="3"></div>
+    <div class="vapor-transition-gradient absolute inset-0"></div>
+    {blobs.map((_, i) => (
+      <div class="vapor-transition-blob" data-vt-blob={i + 1}></div>
+    ))}
   </div>
 </div>
 
 <style is:global>
   /* ===== Transizione vapore ===== */
-  .vapor-transition { background: transparent; }
+  .vapor-transition {
+    clip-path: inset(0 0 0 0);
+  }
 
   .vapor-transition-layer {
     opacity: 0;
     will-change: opacity, transform, filter;
   }
 
+  /* gradient crema che sale come una coltre */
+  .vapor-transition-gradient {
+    background: radial-gradient(ellipse at 50% 120%, rgba(248,234,219,0.9) 0%, rgba(248,234,219,0.45) 45%, transparent 75%);
+    filter: blur(10px);
+    transform: translateY(40%);
+  }
+
   .vapor-transition-blob {
     position: absolute;
     border-radius: 9999px;
-    filter: blur(34px);
+    filter: blur(42px);
     background: radial-gradient(circle at 50% 50%,
       rgba(248,234,219,0.95) 0%,
       rgba(248,234,219,0.55) 45%,
@@ -42,13 +52,13 @@ const { targetSectionId = 'storia' } = Astro.props;
       transparent 100%);
     will-change: transform, opacity;
   }
-  .vapor-transition-blob[data-vt-blob="1"] {
-    width: 34rem; height: 22rem; left: -4rem; top: 20%;
-  }
-  .vapor-transition-blob[data-vt-blob="2"] {
-    width: 40rem; height: 26rem; right: -6rem; top: 45%;
-  }
-  .vapor-transition-blob[data-vt-blob="3"] {
-    width: 28rem; height: 20rem; left: 45%; top: 65%;
+  .vapor-transition-blob[data-vt-blob="1"] { width: 30rem; height: 22rem; left: -4rem; top: 15%; }
+  .vapor-transition-blob[data-vt-blob="2"] { width: 36rem; height: 24rem; right: -6rem; top: 40%; }
+  .vapor-transition-blob[data-vt-blob="3"] { width: 28rem; height: 20rem; left: 30%; top: 60%; }
+  .vapor-transition-blob[data-vt-blob="4"] { width: 24rem; height: 20rem; left: 5%; top: 75%; }
+  .vapor-transition-blob[data-vt-blob="5"] { width: 34rem; height: 22rem; right: 8%; top: 12%; }
+
+  @media (max-width: 640px) {
+    .vapor-transition-blob[data-vt-blob="5"] { display: none; }
   }
 </style>

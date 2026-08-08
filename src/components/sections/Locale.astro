@@ -1,0 +1,45 @@
+---
+// Il nostro locale — 4 foto dell'ambiente interno (bancone, sala, tavoli).
+// Sezione compatta a griglia, foto reali dall'interno del ristorante.
+interface Props { id?: string; }
+const { id = 'locale' } = Astro.props;
+const shots = [
+  { img: '/photos/interior-1.jpg', label: 'La sala', desc: 'Tavoli, luce calda e un quadro che racconta la bottega.' },
+  { img: '/photos/interior-bancone.jpg', label: 'Il bancone', desc: 'Il cuore dove i piatti nascono al vapore.' },
+  { img: '/photos/interior-sala.jpg', label: 'Atmosfera', desc: 'Spazi curati, pensati per sentirsi a casa.' },
+  { img: '/photos/interior-tavoli.jpg', label: 'I tavoli', desc: 'Dettagli e materiali per un piccolo viaggio di gusto.' },
+];
+---
+
+<section id={id} class="relative w-full overflow-hidden bg-crema py-20 md:py-28" data-st-section>
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="text-center">
+      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>Vieni a trovarci</span>
+      <h2 class="mt-4 font-anton text-[clamp(2.2rem,6.5vw,4.5rem)] uppercase text-antracite" data-reveal data-delay="0.1">Il nostro locale</h2>
+      <p class="mx-auto mt-6 max-w-2xl font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-antracite/70" data-reveal data-delay="0.2">
+        Un ambiente caldo e raccolto, dove ogni piatto nasce al vapore.
+      </p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {shots.map((s, i) => (
+        <figure class="group relative overflow-hidden rounded-2xl" data-reveal data-delay={String(i * 0.1)}>
+          <div class="relative aspect-[4/5] overflow-hidden">
+            <img
+              src={s.img}
+              alt={s.label}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-nero/70 via-transparent to-transparent" aria-hidden="true"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 p-5">
+              <div class="font-anton text-xl uppercase leading-tight text-crema">{s.label}</div>
+              <p class="mt-1 font-poppins text-xs leading-relaxed text-crema/70">{s.desc}</p>
+            </figcaption>
+          </div>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

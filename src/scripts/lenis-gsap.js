@@ -159,8 +159,8 @@ function initMagnetic() {
 }
 
 // --- Transizione vapore Hero→Storia: il passaggio chiave.
-// Pin della sezione in uscita + blur progressivo + vapore che sale a piena
-// opacità e si dirada rivelando la sezione successiva. Scrub-driven.
+// Una coltre di vapore che sale dal fondo, satura lo schermo e si dirada
+// rivelando la sezione successiva nitida. Scrub-driven sul blocco 100vh.
 function initVaporTransition() {
   const vt = document.querySelector('[data-vapor-transition]');
   if (!vt) return;
@@ -173,11 +173,11 @@ function initVaporTransition() {
   if (!target) return;
 
   const layer = vt.querySelector('.vapor-transition-layer');
+  const gradient = vt.querySelector('.vapor-transition-gradient');
   const blobs = vt.querySelectorAll('.vapor-transition-blob');
-  const hero = document.getElementById('hero');
 
-  // Trigger sul blocco di transizione (120vh): il vapore sale per tutta la
-  // durata del passaggio scuro, poi si dirada rivelando la sezione sotto.
+  // Trigger sul blocco di transizione (100vh): il vapore sale per tutta la
+  // durata del passaggio, poi si dirada rivelando la sezione sotto.
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: vt,
@@ -187,26 +187,16 @@ function initVaporTransition() {
     },
   });
 
-  // Vapore sale e si espande
-  tl.fromTo(layer, { opacity: 0, scale: 0.9, yPercent: 20 }, { opacity: 1, scale: 1.25, yPercent: -30, duration: 0.45, ease: 'power1.inOut' })
-    // Sfondo sfuma
-    .fromTo(blobs, { opacity: 0.4 }, { opacity: 0.9, duration: 0.45, ease: 'power1.inOut' }, 0)
-    // Vapore si dirada rivelando la sezione successiva che emerge nitida
-    .to(layer, { opacity: 0, scale: 1.4, yPercent: -60, duration: 0.5, ease: 'power1.in' });
-
-  // Parallassaggio leggero dei blob (optional, puro effetto)
-  if (hero) {
-    gsap.fromTo(hero, { filter: 'blur(0px)' }, {
-      filter: 'blur(6px)',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: vt,
-        start: 'top bottom',
-        end: 'top top',
-        scrub: true,
-      },
-    });
-  }
+  // 1) La coltre sale dal basso e satura lo schermo
+  tl.fromTo(layer, { opacity: 0, yPercent: 60 }, { opacity: 1, yPercent: 0, duration: 0.5, ease: 'power2.inOut' })
+    // 2) Il gradient crema copre l'intero blocco
+    .fromTo(gradient, { opacity: 0, scale: 0.9, yPercent: 60 }, { opacity: 1, scale: 1.1, yPercent: 0, duration: 0.5, ease: 'power2.inOut' }, 0)
+    // 3) I blob si disperdono
+    .fromTo(blobs, { opacity: 0.4, yPercent: 40 }, { opacity: 0.9, yPercent: -10, duration: 0.5, ease: 'power1.inOut' }, 0)
+    // 4) La sezione successiva emerge nitida sotto il velo che si dirada
+    .fromTo(target, { filter: 'blur(16px)', opacity: 0.85 }, { filter: 'blur(0px)', opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.35)
+    // 5) Il vapore si dirada rivelando tutto
+    .to([layer, gradient], { opacity: 0, scale: 1.2, yPercent: -40, duration: 0.45, ease: 'power1.in' });
 }
 
 function runAll() {

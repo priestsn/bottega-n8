@@ -10,6 +10,7 @@ import Storia from '../components/sections/Storia.astro';
 import Marquee from '../components/Marquee.astro';
 import Filosofia from '../components/sections/Filosofia.astro';
 import Menu from '../components/sections/Menu.astro';
+import Locale from '../components/sections/Locale.astro';
 import Galleria from '../components/Galleria.astro';
 import TavoloTakeaway from '../components/sections/TavoloTakeaway.astro';
 import Stampa from '../components/sections/Stampa.astro';
@@ -28,7 +29,11 @@ import Chiusura from '../components/sections/Chiusura.astro';
   <Storia id="storia" />
   <Marquee />
   <Filosofia id="filosofia" />
-  <Menu id="locale" />
+  <Menu id="menu" />
+  <!-- Divisore di vapore tra il menù (scuro) e il locale (chiaro) -->
+  <div class="bg-antracite" aria-hidden="true"><Vapor variant="divider" tone="light" density={2} /></div>
+  <!-- Il locale (foto interne reali) tra il menù e la galleria -->
+  <Locale id="locale" />
   <!-- Divisore di vapore tra il locale (scuro) e Galleria (scuro) -->
   <div class="bg-antracite" aria-hidden="true"><Vapor variant="divider" tone="light" density={4} /></div>
   <Galleria />
