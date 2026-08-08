@@ -51,6 +51,16 @@
     height: auto;
   }
 
+  a, button, input, textarea, select, [tabindex] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ambra);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -65,12 +75,22 @@
   .text-balance { text-wrap: balance; }
   .touch-target { min-height: 44px; min-width: 44px; }
 
-  /* Schiacciamento al tap per elementi interattivi */
+  /* Schiacciamento al tap per elementi interattivi + easing premium (design-with-taste golden curve) */
   .tap-press {
-    transition: transform 0.12s ease;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    will-change: transform;
   }
   .tap-press:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lift-hover {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .lift-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.5);
+    }
   }
 
   /* Freccia "scorri" in loop continuo */

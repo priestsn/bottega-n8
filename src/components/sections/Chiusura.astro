@@ -28,8 +28,8 @@ const { id = 'chiusura' } = Astro.props;
     <p class="mt-6 font-poppins text-lg text-crema/60" data-reveal data-delay="0.4">Un viaggio di gusto, senza lasciare la città.</p>
 
     <div class="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row" data-reveal data-delay="0.5">
-      <a href="tel:035297334" class="tap-press touch-target inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ambra px-8 py-4 font-poppins text-base font-medium text-nero transition-colors hover:bg-ambra/90 sm:w-auto">Prenota: 035 297 334</a>
-      <a href="https://www.instagram.com/bottegan8/" target="_blank" rel="noopener noreferrer" class="tap-press touch-target inline-flex w-full items-center justify-center gap-2 rounded-xl border border-crema/25 px-8 py-4 font-poppins text-base font-medium text-crema transition-colors hover:bg-crema/10 sm:w-auto">Segui @bottegan8</a>
+      <a href="tel:035297334" class="lift-hover tap-press touch-target inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ambra px-8 py-4 font-poppins text-base font-medium text-nero hover:bg-ambra/90 sm:w-auto">Prenota: 035 297 334</a>
+      <a href="https://www.instagram.com/bottegan8/" target="_blank" rel="noopener noreferrer" class="lift-hover tap-press touch-target inline-flex w-full items-center justify-center gap-2 rounded-xl border border-crema/25 px-8 py-4 font-poppins text-base font-medium text-crema hover:bg-crema/10 sm:w-auto">Segui @bottegan8</a>
     </div>
 
     <a href="#hero" class="group mt-16 inline-flex flex-col items-center gap-2 text-crema/40 transition-colors hover:text-ambra" data-reveal data-delay="0.6">
@@ -58,7 +58,10 @@ const { id = 'chiusura' } = Astro.props;
           Iscriviti
         </button>
       </div>
-      <p id="newsletter-status" class="mt-4 hidden font-poppins text-sm text-ambra" role="status"></p>
+      <p id="newsletter-status" class="mt-4 hidden items-center justify-center gap-2 font-poppins text-sm text-ambra" role="status">
+        <svg class="newsletter-check h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+        <span id="newsletter-status-text"></span>
+      </p>
     </form>
   </div>
 
@@ -93,19 +96,38 @@ const { id = 'chiusura' } = Astro.props;
     const form = document.getElementById('newsletter-form');
     const input = document.getElementById('newsletter-email');
     const status = document.getElementById('newsletter-status');
-    if (form && input && status) {
+    const statusText = document.getElementById('newsletter-status-text');
+    const check = document.querySelector('.newsletter-check');
+    if (form && input && status && statusText) {
+      function drawCheck() {
+        if (!check) return;
+        const path = check.querySelector('path');
+        if (path) {
+          const len = path.getTotalLength();
+          path.style.strokeDasharray = len;
+          path.style.strokeDashoffset = len;
+          requestAnimationFrame(() => {
+            path.style.transition = 'stroke-dashoffset 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s';
+            path.style.strokeDashoffset = '0';
+          });
+        }
+      }
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = input.value.trim();
         const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        status.classList.remove('hidden');
+        status.classList.add('flex');
+        check && (check.style.display = '');
         if (!valid) {
-          status.textContent = 'Inserisci un indirizzo email valido.';
-          status.classList.remove('hidden');
+          statusText.textContent = 'Inserisci un indirizzo email valido.';
+          check && (check.style.display = 'none');
+          input.focus();
           return;
         }
-        status.textContent = 'Grazie! Ti avviseremo ai prossimi arrivi.';
-        status.classList.remove('hidden');
+        statusText.textContent = 'Grazie! Ti avviseremo ai prossimi arrivi.';
         input.value = '';
+        drawCheck();
       });
     }
   });
