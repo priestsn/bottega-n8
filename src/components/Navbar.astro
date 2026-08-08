@@ -13,7 +13,8 @@ const links = [
 <header id="site-nav" class="fixed inset-x-0 top-0 z-[90] -translate-y-full">
   <nav class="flex items-center justify-between gap-4 px-5 py-4 md:px-10" aria-label="Navigazione principale">
     <a href="#hero" class="flex items-center gap-2 touch-target">
-      <img src="/logo.png" alt="Bottega N.8" class="h-9 w-auto" loading="eager" />
+      <img id="nav-logo-dark" src="/logo.png" alt="Bottega N.8" class="h-9 w-auto" loading="eager" />
+      <img id="nav-logo-light" src="/logo-light.png" alt="Bottega N.8" class="h-9 w-auto hidden" loading="eager" />
     </a>
 
     <div class="hidden items-center gap-1 md:flex">
@@ -104,6 +105,13 @@ const links = [
         // Navbar: testo chiaro su sezioni scure, scuro su sezioni chiare
         nav.style.color = isDark ? '#F8EADB' : '#222228';
         toggle.style.color = isDark ? '#F8EADB' : '#222228';
+        // Logo: versione light (crema) su sezioni scure, dark (nero) su sezioni chiare
+        const logoDark = document.getElementById('nav-logo-dark');
+        const logoLight = document.getElementById('nav-logo-light');
+        if (logoDark && logoLight) {
+          logoDark.classList.toggle('hidden', isDark);
+          logoLight.classList.toggle('hidden', !isDark);
+        }
       },
     });
 
