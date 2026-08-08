@@ -1,0 +1,57 @@
+---
+interface Props { id?: string; }
+const { id = 'hero' } = Astro.props;
+const heroImg = '/photos/real-xiaolongbao-1.jpg';
+---
+
+<section id={id} class="relative min-h-[100svh] w-full overflow-hidden bg-nero" data-st-section>
+  <!-- Full-bleed photo with cinematic treatment -->
+  <div class="absolute inset-0">
+    <img
+      src={heroImg}
+      alt="Cestello di bambù con ravioli al vapore, luce calda e drammatica"
+      class="h-full w-full object-cover opacity-80"
+      data-parallax="0.12"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-nero/70 via-nero/40 to-nero" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_100%)]" aria-hidden="true"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 text-center">
+    <div class="mb-8" data-reveal>
+      <img
+        src="/logo.png"
+        alt="Bottega N.8"
+        class="mx-auto h-28 w-auto md:h-40"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+
+    <h1 class="font-anton text-[clamp(2.2rem,9vw,6.5rem)] uppercase leading-[1.02] tracking-wide text-crema text-balance" data-reveal data-delay="0.15">
+      Un viaggio di gusto,<br class="hidden sm:block" /> senza lasciare la città.
+    </h1>
+
+    <p class="mt-8 font-poppins text-[clamp(0.9rem,2.5vw,1.3rem)] font-medium uppercase tracking-[0.35em] text-ambra" data-reveal data-delay="0.3">
+      assapora · condividi · ripeti
+    </p>
+
+    <a
+      href="#storia"
+      class="group mt-16 inline-flex flex-col items-center gap-3 text-crema/70 transition-colors hover:text-ambra"
+      data-reveal data-delay="0.5"
+    >
+      <span class="font-poppins text-xs uppercase tracking-[0.3em]">Scorri per iniziare</span>
+      <svg class="scroll-arrow h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 4v16m0 0l-6-6m6 6l6-6" />
+      </svg>
+    </a>
+  </div>
+
+  <!-- Bottom edge fade to next section -->
+  <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-crema to-transparent" aria-hidden="true"></div>
+</section>

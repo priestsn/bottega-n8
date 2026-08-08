@@ -1,0 +1,73 @@
+---
+interface Props { id?: string; }
+const { id = 'filosofia' } = Astro.props;
+const keywords = [
+  { word: 'equilibrio', desc: "La ricerca costante dell'armonia tra gusto e creatività, tra tecnica e intuizione." },
+  { word: 'autenticità', desc: 'Piatti autentici e originali, nati da ingredienti selezionati e rispetto per la tradizione.' },
+  { word: 'armonia', desc: "L'incontro tra culture diverse che genera un linguaggio culinario sincero e contemporaneo." },
+  { word: 'creatività', desc: 'Spirito moderno e visione personale che reinterpretano la cucina orientale con sensibilità italiana.' },
+];
+---
+
+<section id={id} class="relative w-full overflow-hidden bg-antracite py-24 md:py-36" data-st-section>
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(219,147,74,0.08)_0%,transparent_70%)]" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto w-full max-w-6xl px-6">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>La nostra filosofia</span>
+      <p class="mt-6 font-poppins text-[clamp(1.1rem,3vw,1.5rem)] leading-relaxed text-crema/90 text-balance" data-reveal data-delay="0.1">
+        Ogni proposta racconta un incontro tra culture, esperienze e sapori, in un linguaggio culinario personale e contemporaneo.
+      </p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+      {keywords.map((k, i) => (
+        <article class="keyword-card group relative flex flex-col overflow-hidden rounded-2xl border border-crema/10 bg-crema/[0.03] p-6 transition-colors duration-500 hover:border-ambra/40 hover:bg-crema/[0.06]" data-reveal data-delay={String(i * 0.12)}>
+          <!-- Letter-flip word -->
+          <h3 class="keyword-word font-anton text-[clamp(1.7rem,5vw,2.6rem)] uppercase leading-none tracking-wide text-crema" data-keyword-word aria-label={k.word}>{k.word}</h3>
+          <p class="mt-4 font-poppins text-sm leading-relaxed text-crema/55">{k.desc}</p>
+          <span class="mt-6 h-px w-8 bg-ambra/60 transition-all duration-500 group-hover:w-full" aria-hidden="true"></span>
+        </article>
+      ))}
+    </div>
+
+    <div class="mx-auto mt-16 max-w-2xl text-center">
+      <p class="font-poppins text-[clamp(1rem,2.5vw,1.3rem)] leading-relaxed text-crema/60 text-balance" data-reveal>
+        Per coinvolgere in un'esperienza gastronomica sincera, contemporanea e sorprendentemente vicina.
+      </p>
+      <div class="mx-auto mt-8 h-px w-24 bg-ambra" data-reveal data-delay="0.15"></div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  // Flip 3D lettera per lettera sulle parole chiave, legato allo scroll.
+  window.addEventListener('site:ready', () => {
+    if (window.__reduced || !window.gsap) return;
+    const gsap = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+
+    document.querySelectorAll('[data-keyword-word]').forEach((el, cardIndex) => {
+      const text = el.textContent || '';
+      el.setAttribute('aria-label', text);
+      el.innerHTML = text.split('').map((c) =>
+        `<span class="inline-block will-change-transform" style="display:inline-block;transform:rotateX(-90deg);transform-origin:center bottom;opacity:0;">${c === ' ' ? '&nbsp;' : c}</span>`
+      ).join('');
+
+      const spans = el.querySelectorAll('span');
+      gsap.to(spans, {
+        rotateX: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.035,
+        ease: 'back.out(1.4)',
+        delay: cardIndex * 0.1,
+        scrollTrigger: {
+          trigger: el.closest('.keyword-card'),
+          start: 'top 85%',
+          once: true,
+        },
+      });
+    });
+  });
+</script>

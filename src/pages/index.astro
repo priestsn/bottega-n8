@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Preloader from '../components/Preloader.astro';
+import Navbar from '../components/Navbar.astro';
+import ScrollEight from '../components/ScrollEight.astro';
+import Hero from '../components/sections/Hero.astro';
+import Storia from '../components/sections/Storia.astro';
+import Marquee from '../components/Marquee.astro';
+import Filosofia from '../components/sections/Filosofia.astro';
+import Menu from '../components/sections/Menu.astro';
+import Galleria from '../components/Galleria.astro';
+import TavoloTakeaway from '../components/sections/TavoloTakeaway.astro';
+import Stampa from '../components/sections/Stampa.astro';
+import DoveSiamo from '../components/sections/DoveSiamo.astro';
+import Chiusura from '../components/sections/Chiusura.astro';
+---
+
+<Layout>
+  <Preloader />
+  <Navbar />
+  <ScrollEight />
+
+  <Hero id="hero" />
+  <Storia id="storia" />
+  <Marquee />
+  <Filosofia id="filosofia" />
+  <Menu id="menu" />
+  <Galleria />
+  <TavoloTakeaway id="tavolo-takeaway" />
+  <Stampa id="stampa" />
+  <DoveSiamo id="dove-siamo" />
+  <Chiusura id="chiusura" />
+</Layout>

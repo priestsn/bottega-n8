@@ -1,0 +1,158 @@
+---
+// Galleria Lens — fila marquee di foto reali con zoom-lente sull'hover.
+// Pattern portato da Magic UI "Lens" (21st.dev) in vanilla JS + GSAP, no React.
+// Le foto sono immagini reali di Bottega N.8 estratte da Google Maps.
+const photos = [
+  { src: '/photos/real-ramen-1.jpg', label: 'Ramen', zoom: 1.6 },
+  { src: '/photos/real-xiaolongbao-1.jpg', label: 'Xiaolongbao', zoom: 1.7 },
+  { src: '/photos/real-dimsum-1.jpg', label: 'Dim sum', zoom: 1.6 },
+  { src: '/photos/real-xiaolongbao-3.jpg', label: 'Ravioli al vapore', zoom: 1.7 },
+  { src: '/photos/real-ramen-2.jpg', label: 'Ramen', zoom: 1.6 },
+  { src: '/photos/real-dimsum-2.jpg', label: 'Dim sum', zoom: 1.6 },
+  { src: '/photos/real-xiaolongbao-2.jpg', label: 'Xiaolongbao', zoom: 1.7 },
+  { src: '/photos/real-dimsum-3.jpg', label: 'Dim sum', zoom: 1.6 },
+  { src: '/photos/real-piatti-1.jpg', label: 'Specialità della casa', zoom: 1.6 },
+];
+// Duplica per lo scorrimento infinito
+const row = [...photos, ...photos];
+---
+
+<section id="galleria" class="relative w-full overflow-hidden bg-nero py-24 md:py-32" data-st-section>
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="mb-14 text-center md:mb-20">
+      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>La nostra cucina</span>
+      <h2 class="mt-4 font-anton text-[clamp(2.4rem,7vw,5rem)] uppercase text-crema" data-split>
+        Dal vivo
+      </h2>
+      <p class="mx-auto mt-6 max-w-2xl font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-crema/60" data-reveal data-delay="0.2">
+        Passa il cursore sui piatti per guardarli da vicino.
+      </p>
+    </div>
+  </div>
+
+  <div class="lens-marquee relative" data-lens-marquee>
+    <div class="lens-track flex w-max items-center gap-6 px-6" data-lens-track>
+      {row.map((p, i) => (
+        <figure class="lens-card group relative h-[280px] w-[340px] flex-shrink-0 overflow-hidden rounded-2xl md:h-[340px] md:w-[420px]"
+          data-lens-card role="group" aria-label={p.label} tabindex="0">
+          <!-- immagine base -->
+          <img
+            src={p.src}
+            alt={p.label}
+            loading="lazy"
+            decoding="async"
+            class="lens-base absolute inset-0 h-full w-full object-cover"
+          />
+          <!-- layer zoom con maschera radiale (lente) -->
+          <div class="lens-zoom absolute inset-0 pointer-events-none" data-lens-zoom style={{ [`--zoom`]: p.zoom }}>
+            <img
+              src={p.src}
+              alt=""
+              aria-hidden="true"
+              class="lens-zoom-img absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+          <figcaption class="absolute bottom-4 left-4 z-30 rounded-full bg-nero/70 px-4 py-1.5 font-poppins text-xs uppercase tracking-widest text-crema backdrop-blur-sm">
+            {p.label}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+    <!-- sfumature ai bordi -->
+    <div class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-nero to-transparent z-20"></div>
+    <div class="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-nero to-transparent z-20"></div>
+  </div>
+</section>
+
+<style is:global>
+  /* Traccia: scorrimento continuo via CSS keyframes */
+  .lens-track {
+    will-change: transform;
+    animation: lens-marquee 60s linear infinite;
+  }
+  [data-lens-marquee]:hover .lens-track {
+    animation-play-state: paused;
+  }
+  @keyframes lens-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Card: base */
+  .lens-card {
+    cursor: zoom-in;
+  }
+  .lens-base {
+    transition: filter 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Layer zoom: inizialmente nascosto (mask vuota), gestito da JS */
+  .lens-zoom {
+    --lens-x: 0px;
+    --lens-y: 0px;
+    --lens-size: 0px;
+    opacity: 0;
+    z-index: 10;
+    -webkit-mask-image: radial-gradient(circle var(--lens-size) at var(--lens-x) var(--lens-y), #000 100%, transparent 100%);
+    mask-image: radial-gradient(circle var(--lens-size) at var(--lens-x) var(--lens-y), #000 100%, transparent 100%);
+    transition: opacity 0.25s ease;
+  }
+  .lens-card.is-zooming .lens-zoom {
+    opacity: 1;
+  }
+  .lens-zoom-img {
+    transform: scale(var(--zoom, 1.6));
+    transform-origin: var(--lens-x) var(--lens-y);
+  }
+</style>
+
+<script>
+  // Galleria Lens — porta del pattern Magic UI in vanilla JS.
+  // Non interfere con mobile (no hover) né con prefers-reduced-motion.
+  (function () {
+    if (window.__reduced) return;
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    const cards = document.querySelectorAll('[data-lens-card]');
+    cards.forEach((card) => {
+      const zoom = card.querySelector('.lens-zoom');
+      const zoomImg = card.querySelector('.lens-zoom-img');
+      if (!zoom || !zoomImg) return;
+
+      let raf = null;
+
+      function move(e) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        // lens size animata via CSS var (transizione fluida)
+        zoom.style.setProperty('--lens-x', x + 'px');
+        zoom.style.setProperty('--lens-y', y + 'px');
+        zoom.style.setProperty('--lens-size', '150px');
+        zoomImg.style.transformOrigin = x + 'px ' + y + 'px';
+      }
+
+      function enter() {
+        card.classList.add('is-zooming');
+      }
+      function leave() {
+        card.classList.remove('is-zooming');
+        zoom.style.setProperty('--lens-size', '0px');
+      }
+      function moveRaf(e) {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          move(e);
+          raf = null;
+        });
+      }
+
+      card.addEventListener('mouseenter', enter);
+      card.addEventListener('mouseleave', leave);
+      card.addEventListener('mousemove', moveRaf);
+      // accessibilità tastiera
+      card.addEventListener('focus', enter);
+      card.addEventListener('blur', leave);
+    });
+  })();
+</script>

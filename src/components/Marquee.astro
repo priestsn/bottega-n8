@@ -1,0 +1,17 @@
+---
+// Banda marquee: scorrimento infinito di parole chiave.
+// CSS-driven (transform translateX) = GPU-friendly, zero JS.
+const words = ['assapora', 'condividi', 'ripeti', 'equilibrio', 'autenticità', 'armonia', 'creatività', 'contemporaneo'];
+const row = [...words, ...words];
+---
+
+<div class="relative w-full overflow-hidden border-y border-ambra/20 bg-nero py-5" aria-hidden="true">
+  <div class="flex w-max animate-marquee gap-10 pr-10">
+    {row.map((w, i) => (
+      <span class="flex items-center gap-10 whitespace-nowrap">
+        <span class="font-anton text-2xl uppercase tracking-wider text-crema/90 md:text-3xl">{w}</span>
+        <span class="text-ambra">&#8728;</span>
+      </span>
+    ))}
+  </div>
+</div>

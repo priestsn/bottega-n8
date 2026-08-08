@@ -1,0 +1,181 @@
+---
+// Custom cursor premium (desktop): punto ambra preciso + anelli trailing con lag.
+// Attivo solo su device con mouse reale (hover:hover e pointer:fine),
+// disattivato con prefers-reduced-motion. Su touch/mobile resta il default.
+---
+<div class="custom-cursor" id="custom-cursor" aria-hidden="true">
+  <div class="cursor-trail cursor-trail-3" data-trail></div>
+  <div class="cursor-trail cursor-trail-2" data-trail></div>
+  <div class="cursor-trail cursor-trail-1" data-trail></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+</div>
+
+<style>
+  /* Il cursore nativo si nasconde solo quando il custom è davvero attivo */
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+
+  .custom-cursor {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    display: none;
+  }
+
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 9999px;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background: var(--color-ambra);
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.25s ease;
+  }
+
+  /* Anello principale: mix-blend-difference per contrasto su ogni sfondo */
+  .cursor-ring {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1.5px solid var(--color-ambra);
+    opacity: 0.85;
+    z-index: 9998;
+    mix-blend-mode: difference;
+    transition: width 0.25s ease, height 0.25s ease, margin 0.25s ease,
+      opacity 0.25s ease, background-color 0.25s ease;
+  }
+
+  /* Anelli trailing: più leggeri, lag progressivo (stiffness decrescente) */
+  .cursor-trail {
+    background: var(--color-ambra);
+    opacity: 0;
+  }
+  .cursor-trail-1 { width: 14px; height: 14px; margin: -7px 0 0 -7px; z-index: 9997; opacity: 0.28; }
+  .cursor-trail-2 { width: 10px; height: 10px; margin: -5px 0 0 -5px; z-index: 9996; opacity: 0.18; }
+  .cursor-trail-3 { width: 6px;  height: 6px;  margin: -3px 0 0 -3px; z-index: 9995; opacity: 0.10; }
+
+  /* Hover su elementi interattivi: l'anello si espande e riempie */
+  .cursor-ring.is-hover {
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    background: rgba(219, 147, 74, 0.12);
+    opacity: 1;
+  }
+  .cursor-ring.is-hidden {
+    opacity: 0;
+  }
+  .custom-cursor.is-leaving .cursor-dot,
+  .custom-cursor.is-leaving .cursor-ring,
+  .custom-cursor.is-leaving .cursor-trail {
+    opacity: 0;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!finePointer || reduced) return; // niente cursor custom su touch / reduced-motion
+
+    const root = document.documentElement;
+    const cursor = document.getElementById('custom-cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    const trails = [...document.querySelectorAll('[data-trail]')];
+    if (!cursor || !dot || !ring) return;
+
+    root.classList.add('has-custom-cursor');
+    cursor.style.display = 'block';
+
+    // Trailing con velocità decrescenti (lerp): il primo insegue di più
+    const TRAIL_LERP = [0.45, 0.3, 0.2];
+
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2; // posizione reale
+    let rx = mx, ry = my; // posizione del ring (con lag)
+    const trailP = trails.map(() => ({ x: mx, y: my })); // posizioni trailing
+    let visible = false;
+
+    // Selettori su cui l'anello si espande
+    const interactiveSel =
+      'a, button, [data-cursor], .dish-card, input, textarea, select, [role="button"]';
+
+    const apply = (el, x, y) => {
+      if (window.gsap) {
+        window.gsap.set(el, { x, y });
+      } else {
+        el.style.transform = `translate(${x}px, ${y}px)`;
+      }
+    };
+
+    // Hover detection delegata su documentElement (perf, mouseover/mouseout)
+    root.addEventListener('mouseover', (e) => {
+      const t = e.target;
+      if (t && t.closest && t.closest(interactiveSel)) ring.classList.add('is-hover');
+    });
+    root.addEventListener('mouseout', (e) => {
+      const t = e.target;
+      if (t && t.closest && t.closest(interactiveSel)) ring.classList.remove('is-hover');
+    });
+
+    function onMove(e) {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!visible) {
+        visible = true;
+        dot.style.opacity = 1;
+        ring.style.opacity = 0.85;
+        apply(dot, mx, my);
+        apply(ring, mx, my);
+        trails.forEach((tr, i) => { apply(tr, mx, my); trailP[i] = { x: mx, y: my }; });
+        rx = mx; ry = my;
+      }
+    }
+
+    // RAF lerp: dot preciso, ring insegue, trailing ancora più dietro
+    function raf() {
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+
+      apply(dot, mx, my);
+      apply(ring, rx, ry);
+
+      let px = rx, py = ry;
+      trails.forEach((tr, i) => {
+        const L = TRAIL_LERP[i];
+        const tp = trailP[i];
+        tp.x += (px - tp.x) * L;
+        tp.y += (py - tp.y) * L;
+        apply(tr, tp.x, tp.y);
+        px = tp.x; py = tp.y;
+      });
+
+      requestAnimationFrame(raf);
+    }
+
+    function onLeave() {
+      visible = false;
+      dot.style.opacity = 0;
+      ring.style.opacity = 0;
+      ring.classList.remove('is-hover');
+    }
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    document.addEventListener('mouseleave', onLeave);
+    requestAnimationFrame(raf);
+  })();
+</script>

@@ -1,0 +1,45 @@
+---
+interface Props { id?: string; }
+const { id = 'storia' } = Astro.props;
+const storiaImg = '/photos/real-xiaolongbao-2.jpg';
+---
+
+<section id={id} class="relative w-full overflow-hidden bg-crema" data-st-section>
+
+  <div class="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-0 px-0 py-0 md:grid-cols-2">
+    <!-- Text -->
+    <div class="flex flex-col justify-center px-6 py-16 md:px-12 md:py-24 lg:px-20">
+      <span class="mb-6 inline-flex items-center gap-3 font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>
+        <span class="h-px w-10 bg-ambra"></span> La nostra storia
+      </span>
+
+      <h2 class="max-w-xl font-anton text-[clamp(2rem,6vw,4rem)] leading-[1.05] text-antracite opacity-0" data-split>
+        Un equilibrio di culture e sapori
+      </h2>
+
+      <div class="mt-8 max-w-lg space-y-5 font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-antracite/80">
+        <p data-reveal data-delay="0.2">
+          Nel cuore di Bergamo, in via Maffei, nasce Bottega N.8: un ristorante e take away che unisce artigianalità italiana e ispirazione orientale in chiave contemporanea.
+        </p>
+        <p data-reveal data-delay="0.3">
+          Guidato da uno chef con anni di esperienza e una passione per l'incontro tra mondi diversi, Bottega N.8 reinterpreta la cucina orientale con sensibilità italiana e spirito moderno.
+        </p>
+      </div>
+
+      <div class="mt-10 h-px w-24 bg-ambra" data-reveal data-delay="0.4"></div>
+    </div>
+
+    <!-- Image -->
+    <div class="relative order-first min-h-[50svh] md:order-last">
+      <img
+        src={storiaImg}
+        alt="Ravioli xiaolongbao nel cestello di bambù, specialità di Bottega N.8"
+        class="absolute inset-0 h-full w-full object-cover"
+        data-parallax="0.1"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-nero/30 to-transparent md:bg-gradient-to-r" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>

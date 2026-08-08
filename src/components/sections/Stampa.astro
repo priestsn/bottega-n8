@@ -1,0 +1,55 @@
+---
+// Sezione "Stampa / Recensioni" — social proof.
+// Citazioni editoriali con virgolette grandi, layout da rivista.
+const press = [
+  {
+    quote: "Una cucina asiatica contemporanea di stampo cinese, lontana dai ristoranti all you can eat della città: tecnica, ingredienti scelti e una visione personale.",
+    source: 'Italia a Tavola',
+    context: 'Novembre 2025',
+  },
+  {
+    quote: "Un vero incontro generazionale e familiare tra due mondi: la firma di un giovane chef affiancato da anni di esperienza.",
+    source: 'QUI Bergamo',
+    context: 'Novembre 2025',
+  },
+  {
+    quote: "Piatti autentici ed equilibrati, nati da ingredienti selezionati e da una ricerca costante dell'armonia tra gusto e creatività.",
+    source: 'Il pubblico',
+    context: 'Recensioni locali',
+  },
+];
+---
+
+<section id="stampa" class="relative w-full overflow-hidden bg-crema py-24 md:py-36" data-st-section>
+  <div class="relative z-10 mx-auto w-full max-w-7xl px-6">
+    <div class="mx-auto max-w-2xl text-center">
+      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>Dicono di noi</span>
+      <h2 class="mt-4 font-anton text-[clamp(2.2rem,6vw,4rem)] uppercase text-antracite" data-reveal data-delay="0.1">
+        Tra i sapori di Bergamo
+      </h2>
+      <div class="mx-auto mt-6 h-px w-24 bg-ambra" data-reveal data-delay="0.2"></div>
+    </div>
+
+    <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
+      {press.map((p, i) => (
+        <figure
+          class="relative flex flex-col rounded-3xl border border-antracite/10 bg-bianco p-8 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_60px_-20px_rgba(0,0,0,0.25)]"
+          data-reveal
+          data-delay={String(i * 0.12)}
+        >
+          <span class="font-anton text-6xl leading-none text-ambra/40" aria-hidden="true">&ldquo;</span>
+          <blockquote class="mt-2 flex-1 font-poppins text-base leading-relaxed text-antracite/80">
+            {p.quote}
+          </blockquote>
+          <figcaption class="mt-8 flex items-end justify-between border-t border-antracite/10 pt-6">
+            <div>
+              <div class="font-anton text-lg uppercase text-antracite">{p.source}</div>
+              <div class="mt-1 font-poppins text-sm text-antracite/50">{p.context}</div>
+            </div>
+            <div class="h-px w-10 bg-ambra" aria-hidden="true"></div>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

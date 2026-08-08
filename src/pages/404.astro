@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout>
+  <main class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-antracite px-6 text-center">
+    <!-- Sfondo: grande 8/infinito sfumato -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      <svg class="h-[70vh] w-auto opacity-[0.05]" viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#DB934A" stroke-width="1.5">
+          <path d="M30 10 C14 10 6 22 6 35 C6 48 14 57 30 60 C46 63 54 72 54 85 C54 98 46 110 30 110 C14 110 6 98 6 85" fill="none" stroke-linecap="round"/>
+          <path d="M30 10 C46 10 54 22 54 35 C54 48 46 57 30 60 C14 63 6 72 6 85 C6 98 14 110 30 110" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="relative z-10 flex flex-col items-center">
+      <span class="font-poppins text-xs uppercase tracking-[0.4em] text-ambra">Errore · 4 · 0 · 4</span>
+      <p class="mt-8 font-anton text-[clamp(5rem,20vw,12rem)] uppercase leading-none text-crema">
+        404
+      </p>
+      <p class="mt-4 max-w-md font-poppins text-lg leading-relaxed text-crema/70">
+        Questa pagina non è nel menù. Ma non ti lasciamo digiuno: torna al punto di partenza.
+      </p>
+
+      <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+        <a
+          href="/"
+          class="tap-press inline-flex touch-target items-center gap-3 rounded-full bg-ambra px-8 py-4 font-poppins text-sm font-semibold uppercase tracking-widest text-nero transition-colors duration-300 hover:bg-crema"
+        >
+          Torna alla home
+        </a>
+        <a
+          href="tel:035297334"
+          class="tap-press inline-flex touch-target items-center gap-3 rounded-full border border-ambra/40 px-8 py-4 font-poppins text-sm font-semibold uppercase tracking-widest text-crema transition-colors duration-300 hover:border-ambra hover:text-ambra"
+        >
+          Contattaci
+        </a>
+      </div>
+
+      <p class="mt-12 font-poppins text-xs uppercase tracking-[0.3em] text-crema/40">
+        assapora · condividi · ripeti
+      </p>
+    </div>
+  </main>
+
+  <script is:inline>
+    // Navbar su 404: riusa i link della home se il menu è presente
+    window.addEventListener('DOMContentLoaded', () => {
+      const nav = document.querySelector('[data-navbar]');
+      if (nav) nav.classList.add('is-visible');
+    });
+  </script>
+</Layout>

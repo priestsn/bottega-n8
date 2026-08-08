@@ -1,0 +1,96 @@
+---
+// Preloader brand: gauge circolare (stile Magic UI AnimatedCircularProgressBar)
+// che si riempie con stroke-dashoffset mentre il logo fade-in, poi reveal verso l'alto.
+// Il cerchio ruota come un "8/∞" ideale: numero % al centro.
+---
+
+<div id="preloader" class="fixed inset-0 z-[100] flex items-center justify-center bg-antracite" aria-hidden="true">
+  <div class="relative flex flex-col items-center gap-6">
+    <!-- Gauge circolare attorno al logo -->
+    <div class="relative flex size-44 items-center justify-center md:size-56">
+      <svg
+        id="preloader-gauge"
+        class="size-full -rotate-90"
+        viewBox="0 0 120 120"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Traccia di fondo -->
+        <circle
+          cx="60" cy="60" r="52"
+          stroke="#2A2A32"
+          stroke-width="3"
+          stroke-linecap="round"
+          fill="none"
+        />
+        <!-- Traccia ambra che si riempie -->
+        <circle
+          id="preloader-gauge-bar"
+          cx="60" cy="60" r="52"
+          stroke="#DB934A"
+          stroke-width="3"
+          stroke-linecap="round"
+          fill="none"
+          stroke-dasharray="326.7"
+          stroke-dashoffset="326.7"
+        />
+      </svg>
+
+      <!-- Logo + contatore al centro del cerchio -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
+        <img src="/logo.png" alt="" class="h-16 w-auto opacity-0 md:h-20" id="preloader-logo" loading="eager" />
+        <div class="flex items-baseline gap-1">
+          <span class="font-anton text-4xl text-crema tabular-nums md:text-5xl" id="preloader-count">0</span>
+          <span class="font-poppins text-xs uppercase text-crema/50">%</span>
+        </div>
+      </div>
+    </div>
+
+    <span class="font-poppins text-[10px] uppercase tracking-[0.4em] text-crema/50 opacity-0" id="preloader-tag">assapora · condividi · ripeti</span>
+  </div>
+</div>
+
+<script is:inline>
+  function runPreloader() {
+    const pre = document.getElementById('preloader');
+    if (!pre || window.__reduced) {
+      pre?.remove();
+      return;
+    }
+    const gsap = window.gsap;
+    const logo = document.getElementById('preloader-logo');
+    const tag = document.getElementById('preloader-tag');
+    const countEl = document.getElementById('preloader-count');
+    const gaugeBar = document.getElementById('preloader-gauge-bar');
+    const countObj = { val: 0 };
+    const CIRC = 326.7; // 2 * PI * 52
+
+    const setProgress = () => {
+      if (countEl) countEl.textContent = String(Math.round(countObj.val));
+      if (gaugeBar) gaugeBar.setAttribute('stroke-dashoffset', String(CIRC * (1 - countObj.val / 100)));
+    };
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.to(pre, {
+          yPercent: -100,
+          duration: 0.8,
+          ease: 'power4.inOut',
+          onComplete: () => pre.remove(),
+        });
+      },
+    });
+
+    tl.to(logo, { opacity: 1, duration: 0.5, ease: 'power2.out' })
+      .to(countObj, { val: 100, duration: 1.6, ease: 'power2.inOut', onUpdate: setProgress }, '-=0.1')
+      .to(tag, { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.6')
+      .to({}, { duration: 0.4 })
+      .to([logo, tag, countEl], { opacity: 0, y: -16, duration: 0.4, ease: 'power2.in' }, '-=0.2');
+  }
+
+  if (window.gsap && document.readyState !== 'loading') {
+    runPreloader();
+  } else {
+    window.addEventListener('DOMContentLoaded', runPreloader);
+  }
+</script>

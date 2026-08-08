@@ -1,0 +1,61 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1A1E" />
+      <stop offset="50%" stop-color="#1E1A16" />
+      <stop offset="100%" stop-color="#F8EADB" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F8EADB" />
+      <stop offset="50%" stop-color="#DB934A" />
+      <stop offset="100%" stop-color="#F8EADB" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#DB934A" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#DB934A" stop-opacity="0" />
+    </radialGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)" />
+  
+  <!-- Subtle noise texture -->
+  <rect width="1200" height="630" filter="url(#noise)" opacity="0.03" />
+  
+  <!-- Ambient glow -->
+  <ellipse cx="600" cy="190" rx="500" ry="250" fill="url(#glow)" />
+  
+  <!-- Decorative lines -->
+  <g stroke="#DB934A" stroke-width="1" fill="none" opacity="0.15">
+    <path d="M100 500 Q300 400 600 350 Q900 300 1100 250" />
+    <path d="M100 550 Q300 450 600 400 Q900 350 1100 300" stroke-dasharray="20,20" />
+  </g>
+  
+  <!-- Main logo / "8" symbol -->
+  <g transform="translate(600, 280)">
+    <!-- Outer circle -->
+    <circle cx="0" cy="0" r="80" stroke="url(#textGradient)" stroke-width="3" fill="none" />
+    <!-- Inner circle -->
+    <circle cx="0" cy="0" r="60" stroke="url(#textGradient)" stroke-width="1.5" fill="none" />
+    <!-- Infinity/8 symbol -->
+    <path d="M0 -40 C27.6 -40 50 -17.6 50 10 C50 37.6 27.6 60 0 60 C-27.6 60 -50 37.6 -50 10 C-50 -17.6 -27.6 -40 0 -40 Z M0 -20 C-16.5 -20 -30 -6.5 -30 10 C-30 26.5 -16.5 40 0 40 C16.5 40 30 26.5 30 10 C30 -6.5 16.5 -20 0 -20 Z" fill="url(#textGradient)" />
+  </g>
+  
+  <!-- Brand name -->
+  <text x="600" y="420" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="72" fill="url(#textGradient)" font-weight="400" letter-spacing="4">
+    Bottega N.8
+  </text>
+  
+  <!-- Tagline -->
+  <text x="600" y="490" text-anchor="middle" font-family="Poppins, system-ui, sans-serif" font-size="20" fill="#F8EADB" font-weight="500" letter-spacing="3" opacity="0.8">
+    UN VIAGGIO DI GUSTO, SENZA LASCIARE LA CITTÀ
+  </text>
+  
+  <!-- Location hint -->
+  <text x="600" y="540" text-anchor="middle" font-family="Poppins, system-ui, sans-serif" font-size="16" fill="#DB934A" font-weight="400" letter-spacing="2" opacity="0.9">
+    Via Clara Maffei 8 · 24121 Bergamo
+  </text>
+</svg>

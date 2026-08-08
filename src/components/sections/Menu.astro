@@ -1,0 +1,144 @@
+---
+interface Props { id?: string; }
+const { id = 'menu' } = Astro.props;
+const dishes = [
+  {
+    name: 'Ombrina o bovino allo zenzero',
+    cat: 'Ravioli al vapore',
+    desc: 'Ravioli fatti a mano con ripieno di ombrina delicata o manzo profumato allo zenzero fresco, cotti al vapore nel cestello di bambù.',
+    img: '/photos/ravioli-xlb.jpg',
+    alt: 'Ravioli al vapore nel cestello di bambù, la specialità di Bottega N.8',
+  },
+  {
+    name: 'Solo di pesce',
+    cat: 'Ramen',
+    desc: 'Brodo cristallino di pesce, ramen artigianali, fettine di pesce crudo scottato dal brodo bollente, cipollotto fresco.',
+    img: '/photos/real-ramen-1.jpg',
+    alt: 'Ciotola di ramen con brodo caldo, foto reale di Bottega N.8',
+  },
+  {
+    name: 'Ragù e funghi shiitake',
+    cat: 'Sticky rice',
+    desc: 'Riso glutinoso cotto lentamente con ragù aromatico e funghi shiitake saltati, servito nel tradizionale contenitore in terracotta.',
+    img: '/photos/real-dimsum-1.jpg',
+    alt: 'Dim sum nel cestello di bambù, foto reale di Bottega N.8',
+  },
+  {
+    name: 'Brodo di manzo e carpaccio scottato',
+    cat: 'Phở',
+    desc: 'Brodo di manzo chiarificato 12 ore, tagliatelle di riso, carpaccio di manzo che cuoce nel brodo bollente, erbe fresche, germogli, lime.',
+    img: '/photos/real-ramen-2.jpg',
+    alt: 'Ciotola di phở con carne e erbe fresche, foto reale di Bottega N.8',
+  },
+];
+---
+
+<section id={id} class="relative w-full overflow-hidden bg-nero" data-st-section>
+  <!-- Header -->
+  <div class="mx-auto max-w-7xl px-6 pt-20 md:pt-28">
+    <div class="text-center">
+      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>La nostra cucina</span>
+      <h2 class="mt-4 font-anton text-[clamp(2.4rem,7vw,5rem)] uppercase text-crema" data-reveal data-delay="0.1">Il nostro menu</h2>
+      <p class="mx-auto mt-6 max-w-2xl font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-crema/60" data-reveal data-delay="0.2">
+        Piatti autentici e originali, nati da ingredienti selezionati e dalla ricerca costante dell'armonia tra gusto e creatività.
+      </p>
+    </div>
+  </div>
+
+  <!-- Desktop: horizontal pinned gallery -->
+  <div class="hidden lg:block" data-menu-desktop>
+    <div class="relative h-[110vh]" data-menu-pin>
+      <div class="sticky top-0 flex h-screen items-center overflow-hidden" data-menu-track-wrap>
+        <div class="flex w-max items-center gap-10 px-[10vw] pt-16" data-menu-track>
+          {dishes.map((d, i) => (
+            <article class="group w-[420px] flex-shrink-0 xl:w-[480px]" data-reveal data-delay={String(i * 0.1)}>
+              <div class="relative aspect-[4/5] overflow-hidden rounded-2xl">
+                <div class="absolute inset-0 scale-[1.15]" data-menu-img-wrap>
+                  <img
+                    src={d.img}
+                    alt={d.alt}
+                    class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    data-menu-img
+                  />
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-nero/60 via-transparent to-transparent" aria-hidden="true"></div>
+                <span class="absolute left-4 top-4 rounded-full bg-nero/60 px-4 py-1.5 font-poppins text-xs uppercase tracking-widest text-ambra backdrop-blur-sm">{d.cat}</span>
+              </div>
+              <div class="px-1 pt-6">
+                <h3 class="font-anton text-3xl uppercase leading-tight text-crema">{d.name}</h3>
+                <p class="mt-3 font-poppins text-base leading-relaxed text-crema/60">{d.desc}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile/tablet: vertical grid -->
+  <div class="px-6 py-16 lg:hidden">
+    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2">
+      {dishes.map((d, i) => (
+        <article class="group" data-reveal data-delay={String(i * 0.1)}>
+          <div class="relative aspect-[4/5] overflow-hidden rounded-2xl">
+            <img src={d.img} alt={d.alt} class="h-full w-full object-cover" loading="lazy" decoding="async" />
+            <div class="absolute inset-0 bg-gradient-to-t from-nero/60 via-transparent to-transparent" aria-hidden="true"></div>
+            <span class="absolute left-4 top-4 rounded-full bg-nero/60 px-4 py-1.5 font-poppins text-xs uppercase tracking-widest text-ambra backdrop-blur-sm">{d.cat}</span>
+          </div>
+          <div class="px-1 pt-5">
+            <h3 class="font-anton text-2xl uppercase leading-tight text-crema">{d.name}</h3>
+            <p class="mt-2 font-poppins text-sm leading-relaxed text-crema/60">{d.desc}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  window.addEventListener('site:ready', () => {
+    if (window.__reduced || window.__isMobile) return;
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    const { gsap, ScrollTrigger } = window;
+    const pinSection = document.querySelector('[data-menu-pin]');
+    const track = document.querySelector('[data-menu-track]');
+    const wrap = document.querySelector('[data-menu-track-wrap]');
+    if (!pinSection || !track || !wrap) return;
+
+    const getDist = () => track.scrollWidth - wrap.clientWidth;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pinSection,
+        start: 'top top',
+        end: () => `+=${getDist()}`,
+        pin: true,
+        anticipatePin: 1,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    tl.to(track, { x: () => -getDist(), ease: 'none' }, 0);
+
+    // Parallax leggero sulle foto: si muovono più lente delle card
+    track.querySelectorAll('[data-menu-img-wrap]').forEach((wrap) => {
+      gsap.fromTo(wrap, { yPercent: -6 }, {
+        yPercent: 6,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: wrap,
+          containerAnimation: tl,
+          start: 'left right',
+          end: 'right left',
+          scrub: 0.5,
+        },
+      });
+    });
+
+    window.addEventListener('resize', () => ScrollTrigger.refresh());
+  });
+</script>

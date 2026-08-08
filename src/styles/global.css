@@ -1,0 +1,94 @@
+@import "tailwindcss";
+@import "@fontsource/anton";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --color-crema: #F8EADB;
+  --color-antracite: #222228;
+  --color-nero: #000000;
+  --color-ambra: #DB934A;
+  --color-bianco: #FFFFFF;
+
+  --font-anton: "Anton", "Arial Narrow", sans-serif;
+  --font-poppins: "Poppins", system-ui, sans-serif;
+
+  --animate-marquee: marquee 28s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-poppins);
+    background-color: var(--color-crema);
+    color: var(--color-antracite);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-anton);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .touch-target { min-height: 44px; min-width: 44px; }
+
+  /* Schiacciamento al tap per elementi interattivi */
+  .tap-press {
+    transition: transform 0.12s ease;
+  }
+  .tap-press:active {
+    transform: scale(0.97);
+  }
+
+  /* Freccia "scorri" in loop continuo */
+  @keyframes scroll-pulse {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+  .scroll-arrow {
+    animation: scroll-pulse 1.6s ease-in-out infinite;
+  }
+
+  /* Film grain overlay for cinematic feel */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
