@@ -46,6 +46,16 @@
       </div>
     </div>
 
+    <!-- Motivo 8/infinito che si disegna sotto la gauge -->
+    <svg id="preloader-eight" class="h-10 w-20 opacity-0" viewBox="0 0 120 60" fill="none" aria-hidden="true">
+      <path
+        id="preloader-eight-draw"
+        d="M30 30 C30 12 90 12 90 30 C90 48 30 48 30 30 C30 12 90 12 90 30"
+        stroke="#DB934A" stroke-width="2" stroke-linecap="round"
+        stroke-dasharray="260" stroke-dashoffset="260"
+      />
+    </svg>
+
     <span class="font-poppins text-[10px] uppercase tracking-[0.4em] text-crema/50 opacity-0" id="preloader-tag">assapora · condividi · ripeti</span>
   </div>
 </div>
@@ -63,7 +73,10 @@
     const countEl = document.getElementById('preloader-count');
     const gaugeBar = document.getElementById('preloader-gauge-bar');
     const countObj = { val: 0 };
+    const eight = document.getElementById('preloader-eight');
+    const eightDraw = document.getElementById('preloader-eight-draw');
     const CIRC = 326.7; // 2 * PI * 52
+    const EIGHT = 260;
 
     const setProgress = () => {
       if (countEl) countEl.textContent = String(Math.round(countObj.val));
@@ -82,10 +95,13 @@
     });
 
     tl.to(logo, { opacity: 1, duration: 0.5, ease: 'power2.out' })
+      // L'8/infinito si disegna mentre la gauge si riempie
+      .to(eight, { opacity: 1, duration: 0.4, ease: 'power2.out' }, '-=0.2')
+      .to(eightDraw, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' }, '-=0.4')
       .to(countObj, { val: 100, duration: 1.6, ease: 'power2.inOut', onUpdate: setProgress }, '-=0.1')
       .to(tag, { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.6')
       .to({}, { duration: 0.4 })
-      .to([logo, tag, countEl], { opacity: 0, y: -16, duration: 0.4, ease: 'power2.in' }, '-=0.2');
+      .to([logo, tag, countEl, eight], { opacity: 0, y: -16, duration: 0.4, ease: 'power2.in' }, '-=0.2');
   }
 
   if (window.gsap && document.readyState !== 'loading') {

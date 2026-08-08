@@ -4,6 +4,7 @@ import Preloader from '../components/Preloader.astro';
 import Navbar from '../components/Navbar.astro';
 import ScrollEight from '../components/ScrollEight.astro';
 import Vapor from '../components/Vapor.astro';
+import VaporTransition from '../components/VaporTransition.astro';
 import Hero from '../components/sections/Hero.astro';
 import Storia from '../components/sections/Storia.astro';
 import Marquee from '../components/Marquee.astro';
@@ -22,8 +23,8 @@ import Chiusura from '../components/sections/Chiusura.astro';
   <ScrollEight />
 
   <Hero id="hero" />
-  <!-- Divisore di vapore sul fondo scuro della Hero -->
-  <div class="bg-nero" aria-hidden="true"><Vapor variant="divider" tone="light" density={3} /></div>
+  <!-- Transizione chiave: vapore che sale da Hero a Storia (unico passaggio scrub+blur) -->
+  <div class="bg-nero" aria-hidden="true"><VaporTransition targetSectionId="storia" /></div>
   <Storia id="storia" />
   <Marquee />
   <Filosofia id="filosofia" />

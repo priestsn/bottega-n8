@@ -1,0 +1,54 @@
+---
+// VaporTransition — transizione "nuvola di vapore" tra Hero (scura) e Storia (chiara).
+// Riservata al primo passaggio chiave: pin della sezione in uscita + blur + vapore
+// che sale a piena opacità e poi si dirada rivelando la sezione successiva.
+// Scrub-driven (ScrollTrigger), NON ripetuta sugli altri confini (performance mobile).
+interface Props {
+  targetSectionId?: string; // id della sezione che segue (quella da rivelare)
+}
+const { targetSectionId = 'storia' } = Astro.props;
+---
+<div
+  class="vapor-transition pointer-events-none relative z-[8] h-[120vh] w-full overflow-hidden"
+  data-vapor-transition
+  data-target={targetSectionId}
+  aria-hidden="true"
+>
+  <!-- Vapore che sale e si dirada -->
+  <div class="vapor-transition-layer absolute inset-0">
+    <div class="vapor-transition-blob" data-vt-blob="1"></div>
+    <div class="vapor-transition-blob" data-vt-blob="2"></div>
+    <div class="vapor-transition-blob" data-vt-blob="3"></div>
+  </div>
+</div>
+
+<style is:global>
+  /* ===== Transizione vapore ===== */
+  .vapor-transition { background: transparent; }
+
+  .vapor-transition-layer {
+    opacity: 0;
+    will-change: opacity, transform, filter;
+  }
+
+  .vapor-transition-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(34px);
+    background: radial-gradient(circle at 50% 50%,
+      rgba(248,234,219,0.95) 0%,
+      rgba(248,234,219,0.55) 45%,
+      rgba(219,147,74,0.3) 75%,
+      transparent 100%);
+    will-change: transform, opacity;
+  }
+  .vapor-transition-blob[data-vt-blob="1"] {
+    width: 34rem; height: 22rem; left: -4rem; top: 20%;
+  }
+  .vapor-transition-blob[data-vt-blob="2"] {
+    width: 40rem; height: 26rem; right: -6rem; top: 45%;
+  }
+  .vapor-transition-blob[data-vt-blob="3"] {
+    width: 28rem; height: 20rem; left: 45%; top: 65%;
+  }
+</style>

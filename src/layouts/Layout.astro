@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
+import Grain from '../components/Grain.astro';
 ---
 
 <!doctype html>
@@ -49,6 +50,7 @@ import CustomCursor from '../components/CustomCursor.astro';
   </head>
   <body class="lenis lenis-smooth">
     <slot />
+    <Grain />
     <CustomCursor />
     <script type="module">
       import '../scripts/lenis-gsap.js';

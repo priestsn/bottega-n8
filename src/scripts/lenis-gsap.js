@@ -158,11 +158,63 @@ function initMagnetic() {
   });
 }
 
+// --- Transizione vapore Hero→Storia: il passaggio chiave.
+// Pin della sezione in uscita + blur progressivo + vapore che sale a piena
+// opacità e si dirada rivelando la sezione successiva. Scrub-driven.
+function initVaporTransition() {
+  const vt = document.querySelector('[data-vapor-transition]');
+  if (!vt) return;
+  if (reduced) {
+    gsap.set(vt, { opacity: 0 });
+    return;
+  }
+  const targetId = vt.dataset.target;
+  const target = targetId ? document.getElementById(targetId) : null;
+  if (!target) return;
+
+  const layer = vt.querySelector('.vapor-transition-layer');
+  const blobs = vt.querySelectorAll('.vapor-transition-blob');
+  const hero = document.getElementById('hero');
+
+  // Trigger sul blocco di transizione (120vh): il vapore sale per tutta la
+  // durata del passaggio scuro, poi si dirada rivelando la sezione sotto.
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: vt,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1,
+    },
+  });
+
+  // Vapore sale e si espande
+  tl.fromTo(layer, { opacity: 0, scale: 0.9, yPercent: 20 }, { opacity: 1, scale: 1.25, yPercent: -30, duration: 0.45, ease: 'power1.inOut' })
+    // Sfondo sfuma
+    .fromTo(blobs, { opacity: 0.4 }, { opacity: 0.9, duration: 0.45, ease: 'power1.inOut' }, 0)
+    // Vapore si dirada rivelando la sezione successiva che emerge nitida
+    .to(layer, { opacity: 0, scale: 1.4, yPercent: -60, duration: 0.5, ease: 'power1.in' });
+
+  // Parallassaggio leggero dei blob (optional, puro effetto)
+  if (hero) {
+    gsap.fromTo(hero, { filter: 'blur(0px)' }, {
+      filter: 'blur(6px)',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: vt,
+        start: 'top bottom',
+        end: 'top top',
+        scrub: true,
+      },
+    });
+  }
+}
+
 function runAll() {
   initReveals();
   initParallax();
   initClipReveal();
   initMagnetic();
+  initVaporTransition();
   initAnimeSplit();
   // Smooth-scroll per tutti gli anchor interni
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
