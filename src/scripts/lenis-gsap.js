@@ -187,16 +187,16 @@ function initVaporTransition() {
     },
   });
 
-  // 1) La coltre sale dal basso e satura lo schermo
-  tl.fromTo(layer, { opacity: 0, yPercent: 60 }, { opacity: 1, yPercent: 0, duration: 0.5, ease: 'power2.inOut' })
-    // 2) Il gradient crema copre l'intero blocco
-    .fromTo(gradient, { opacity: 0, scale: 0.9, yPercent: 60 }, { opacity: 1, scale: 1.1, yPercent: 0, duration: 0.5, ease: 'power2.inOut' }, 0)
-    // 3) I blob si disperdono
-    .fromTo(blobs, { opacity: 0.4, yPercent: 40 }, { opacity: 0.9, yPercent: -10, duration: 0.5, ease: 'power1.inOut' }, 0)
+  // 1) La nebbia sale dal basso e satura lo schermo
+  tl.fromTo(layer, { opacity: 0, yPercent: 70 }, { opacity: 1, yPercent: 0, duration: 0.5, ease: 'power2.inOut' })
+    // 2) Il gradient crema copre l'intero blocco (protagonista: nebbia uniforme)
+    .fromTo(gradient, { opacity: 0, scale: 0.95, yPercent: 70 }, { opacity: 1, scale: 1.15, yPercent: 0, duration: 0.5, ease: 'power2.inOut' }, 0)
+    // 3) I blob si disperdono leggermente (accenti molto sfumati)
+    .fromTo(blobs, { opacity: 0.2, yPercent: 50 }, { opacity: 0.55, yPercent: -15, duration: 0.5, ease: 'power1.inOut' }, 0)
     // 4) La sezione successiva emerge nitida sotto il velo che si dirada
-    .fromTo(target, { filter: 'blur(16px)', opacity: 0.85 }, { filter: 'blur(0px)', opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.35)
-    // 5) Il vapore si dirada rivelando tutto
-    .to([layer, gradient], { opacity: 0, scale: 1.2, yPercent: -40, duration: 0.45, ease: 'power1.in' });
+    .fromTo(target, { filter: 'blur(14px)', opacity: 0.8 }, { filter: 'blur(0px)', opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.4)
+    // 5) La nebbia si dirada rivelando tutto
+    .to([layer, gradient], { opacity: 0, scale: 1.25, yPercent: -45, duration: 0.45, ease: 'power1.in' });
 }
 
 function runAll() {

@@ -46,13 +46,13 @@
       </div>
     </div>
 
-    <!-- Motivo 8/infinito (lemniscata) che si disegna sotto la gauge -->
-    <svg id="preloader-eight" class="h-10 w-20 opacity-0" viewBox="0 0 120 60" fill="none" aria-hidden="true">
+    <!-- Motivo 8/infinito (lemniscata di Bernoulli) che si disegna sotto la gauge -->
+    <svg id="preloader-eight" class="h-16 w-32 opacity-0 md:h-20 md:w-40" viewBox="0 0 200 100" fill="none" aria-hidden="true">
       <path
         id="preloader-eight-draw"
-        d="M60 30 C60 12 30 12 30 30 C30 48 90 48 90 30 C90 12 60 12 60 30 C60 48 30 48 30 30"
+        d="M100 50 C100 25 50 25 50 50 C50 75 150 75 150 50 C150 25 100 25 100 50 C100 75 50 75 50 50"
         stroke="#DB934A" stroke-width="2" stroke-linecap="round"
-        stroke-dasharray="260" stroke-dashoffset="260"
+        stroke-dasharray="324" stroke-dashoffset="324"
       />
     </svg>
 
@@ -76,7 +76,7 @@
     const eight = document.getElementById('preloader-eight');
     const eightDraw = document.getElementById('preloader-eight-draw');
     const CIRC = 326.7; // 2 * PI * 52
-    const EIGHT = 260;
+    const EIGHT = 324;
 
     const setProgress = () => {
       if (countEl) countEl.textContent = String(Math.round(countObj.val));

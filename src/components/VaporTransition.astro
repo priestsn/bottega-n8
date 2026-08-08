@@ -34,21 +34,28 @@ const blobs = Array.from({ length: 5 });
     will-change: opacity, transform, filter;
   }
 
-  /* gradient crema che sale come una coltre */
+  /* gradient crema che sale come una nebbia uniforme */
   .vapor-transition-gradient {
-    background: radial-gradient(ellipse at 50% 120%, rgba(248,234,219,0.9) 0%, rgba(248,234,219,0.45) 45%, transparent 75%);
-    filter: blur(10px);
+    background:
+      linear-gradient(to top,
+        rgba(248,234,219,0.95) 0%,
+        rgba(248,234,219,0.75) 22%,
+        rgba(248,234,219,0.5) 48%,
+        rgba(248,234,219,0.2) 72%,
+        transparent 92%);
+    filter: blur(6px);
     transform: translateY(40%);
+    will-change: transform, opacity;
   }
 
   .vapor-transition-blob {
     position: absolute;
     border-radius: 9999px;
-    filter: blur(42px);
+    filter: blur(70px);
     background: radial-gradient(circle at 50% 50%,
-      rgba(248,234,219,0.95) 0%,
-      rgba(248,234,219,0.55) 45%,
-      rgba(219,147,74,0.3) 75%,
+      rgba(248,234,219,0.75) 0%,
+      rgba(248,234,219,0.45) 45%,
+      rgba(219,147,74,0.18) 78%,
       transparent 100%);
     will-change: transform, opacity;
   }

@@ -91,15 +91,17 @@ const links = [
     });
 
     // Contrasto in base alla sezione attiva
-    const darkSections = ['hero', 'filosofia', 'locale', 'dove-siamo', 'chiusura'];
+    // Sezioni SCURE (bg antracite/nero): hero, filosofia, menu, galleria, dove-siamo, chiusura
+    // Sezioni CHIARE (bg crema): storia, locale, tavolo-takeaway, stampa
+    const darkSections = ['hero', 'filosofia', 'menu', 'galleria', 'dove-siamo', 'chiusura'];
+    const sectionOrder = ['storia', 'filosofia', 'menu', 'locale', 'galleria', 'tavolo-takeaway', 'stampa', 'dove-siamo', 'chiusura'];
     ScrollTrigger.create({
       start: 0,
       end: 'max',
       onUpdate: (self) => {
         const y = self.scroll();
         let active = 'hero';
-        // Trova la sezione in cui ci troviamo
-        for (const s of ['storia', 'filosofia', 'locale', 'tavolo-takeaway', 'dove-siamo', 'chiusura']) {
+        for (const s of sectionOrder) {
           const el = document.getElementById(s);
           if (el && el.offsetTop <= y + 120) active = s;
         }
