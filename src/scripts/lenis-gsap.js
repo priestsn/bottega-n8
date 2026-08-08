@@ -92,9 +92,77 @@ function initParallax() {
 // --- Split text: gestito da anime.js v4 (TextSplitter) in anime-split.js
 // Qui NON tocchiamo più i [data-split] per evitare doppia animazione.
 
+// --- Immagini con clip-path reveal (tenda che si apre su scroll).
+// Pattern premium: le foto si rivelano aprendo il clip-path da giù verso l'alto.
+function initClipReveal() {
+  const els = document.querySelectorAll('[data-clip-reveal]');
+  if (!els.length) return;
+  if (reduced) {
+    gsap.set(els, { clipPath: 'inset(0 0 0% 0)' });
+    return;
+  }
+  els.forEach((el) => {
+    gsap.fromTo(
+      el,
+      { clipPath: 'inset(0 0 100% 0)' },
+      {
+        clipPath: 'inset(0 0 0% 0)',
+        duration: 1.3,
+        ease: 'power4.inOut',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true,
+        },
+      }
+    );
+  });
+}
+
+// --- Magnetic buttons: il bottone si sposta leggermente verso il mouse.
+// Solo su device con mouse reale; disattivato con reduced-motion.
+function initMagnetic() {
+  if (reduced) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  document.querySelectorAll('[data-magnetic]').forEach((el) => {
+    const strength = parseFloat(el.dataset.magnetic || '0.35');
+    const inner = el.querySelector('.magnetic-inner');
+    let tx = 0, ty = 0, cxt = 0, cyt = 0, raf = null;
+
+    const apply = () => {
+      cxt += (tx - cxt) * 0.18;
+      cyt += (ty - cyt) * 0.18;
+      gsap.set(el, { x: cxt, y: cyt });
+      if (inner) gsap.set(inner, { x: cxt * -0.35, y: cyt * -0.35 });
+      raf = requestAnimationFrame(apply);
+    };
+
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      tx = (e.clientX - (r.left + r.width / 2)) * strength;
+      ty = (e.clientY - (r.top + r.height / 2)) * strength;
+    };
+    const onLeave = () => {
+      tx = 0; ty = 0;
+    };
+    const onEnter = () => {
+      if (!raf) apply();
+    };
+
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    // Rimuove il listener RAF quando il bottone esce dal DOM (one-page: non accade)
+  });
+}
+
 function runAll() {
   initReveals();
   initParallax();
+  initClipReveal();
+  initMagnetic();
   initAnimeSplit();
   // Smooth-scroll per tutti gli anchor interni
   document.querySelectorAll('a[href^="#"]').forEach((a) => {

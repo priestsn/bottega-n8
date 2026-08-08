@@ -111,4 +111,29 @@
     opacity: 0.04;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+
+  /* Magnetic buttons: il testo e l'icona scorrono leggermente dentro il bottone
+     quando il mouse si avvicina, dando un feedback "che tira verso il click". */
+  .magnetic {
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+  .magnetic-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+
+  /* Immagini rivelate con clip-path (pattern premium scroll reveal).
+     Stato iniziale: nascosta come tenda; JS la apre con inset su scroll. */
+  [data-clip-reveal] {
+    clip-path: inset(0 0 100% 0);
+    will-change: clip-path;
+  }
+  [data-clip-reveal].is-clipped-out {
+    clip-path: inset(100% 0 0 0);
+  }
 }
