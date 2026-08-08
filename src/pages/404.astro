@@ -42,12 +42,4 @@ import Layout from '../layouts/Layout.astro';
       </p>
     </div>
   </main>
-
-  <script is:inline>
-    // Navbar su 404: riusa i link della home se il menu è presente
-    window.addEventListener('DOMContentLoaded', () => {
-      const nav = document.querySelector('[data-navbar]');
-      if (nav) nav.classList.add('is-visible');
-    });
-  </script>
 </Layout>

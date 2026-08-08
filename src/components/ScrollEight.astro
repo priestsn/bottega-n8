@@ -28,7 +28,7 @@
         id="eight-draw"
         d="M30 10 C14 10 6 22 6 35 C6 48 14 57 30 60 C46 63 54 72 54 85 C54 98 46 110 30 110"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"
-        stroke-dasharray="320" stroke-dashoffset="320"
+        stroke-dasharray="154" stroke-dashoffset="154"
       />
     </g>
     <style>
@@ -46,7 +46,7 @@
     const ScrollTrigger = window.ScrollTrigger;
 
     // Traccia l'8 andando in giù; si "richiude" (riavvolge) tornando all'inizio
-    gsap.fromTo(draw, { strokeDashoffset: 320 }, {
+    gsap.fromTo(draw, { strokeDashoffset: 154 }, {
       strokeDashoffset: 0,
       ease: 'none',
       scrollTrigger: {

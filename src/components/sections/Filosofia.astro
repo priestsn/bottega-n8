@@ -36,9 +36,14 @@ const keywords = ['equilibrio', 'autenticità', 'armonia', 'creatività'];
 <script is:inline>
   // Flip 3D lettera per lettera sulle parole chiave (compatto, una sola riga).
   window.addEventListener('site:ready', () => {
-    if (window.__reduced || !window.gsap) return;
+    const words = document.querySelectorAll('[data-keyword-word]');
+    // Fallback: con reduced-motion o senza GSAP le parole restano VISIBILI
+    if (window.__reduced || !window.gsap) {
+      words.forEach((el) => { el.style.opacity = '1'; });
+      return;
+    }
     const gsap = window.gsap;
-    document.querySelectorAll('[data-keyword-word]').forEach((el, idx) => {
+    words.forEach((el, idx) => {
       const text = el.textContent || '';
       el.setAttribute('aria-label', text);
       el.innerHTML = text.split('').map((c) =>
