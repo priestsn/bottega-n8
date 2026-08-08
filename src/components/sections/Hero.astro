@@ -2,6 +2,7 @@
 interface Props { id?: string; }
 const { id = 'hero' } = Astro.props;
 const heroImg = '/photos/real-xiaolongbao-1.jpg';
+import Vapor from '../Vapor.astro';
 ---
 
 <section id={id} class="relative min-h-[100svh] w-full overflow-hidden bg-nero" data-st-section>
@@ -18,6 +19,11 @@ const heroImg = '/photos/real-xiaolongbao-1.jpg';
     />
     <div class="absolute inset-0 bg-gradient-to-b from-nero/70 via-nero/40 to-nero" aria-hidden="true"></div>
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_100%)]" aria-hidden="true"></div>
+  </div>
+
+  <!-- Vapore che sale dal cestello — tema ricorrente -->
+  <div class="absolute inset-0 z-[6] opacity-90" aria-hidden="true">
+    <Vapor variant="steam" tone="light" density={3} className="h-full" />
   </div>
 
   <!-- Content -->
