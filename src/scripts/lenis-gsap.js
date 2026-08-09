@@ -45,11 +45,13 @@ function initReveals() {
 
     gsap.utils.toArray(items).forEach((el) => {
       const delay = parseFloat(el.dataset.delay || '0');
+      const isTitle = el.matches('h1, h2, h3') || el.closest('h1, h2, h3');
+      const blur = !reduced && isTitle ? 8 : 0;
       gsap.fromTo(
         el,
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 40, filter: blur ? 'blur(8px)' : 'none' },
         {
-          opacity: 1, y: 0,
+          opacity: 1, y: 0, filter: 'blur(0px)',
           duration: 0.9,
           delay,
           ease: 'power3.out',
@@ -199,9 +201,54 @@ function initVaporTransition() {
     .to([layer, gradient], { opacity: 0, scale: 1.25, yPercent: -45, duration: 0.45, ease: 'power1.in' });
 }
 
+// --- Zoom cinematografico Hero su scroll.
+// La foto della hero scala dolcemente (1 → 1.18) e si sfuma mentre
+// esci dal viewport: il classico effetto "Ken Burns" da site premium.
+function initHeroCinematic() {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  const img = hero.querySelector('[data-parallax]');
+  if (!img) return;
+  if (reduced) return;
+
+  gsap.fromTo(
+    img,
+    { scale: 1 },
+    {
+      scale: 1.18,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    }
+  );
+  // Il contenuto si allontana leggermente verso l'alto e sfuma
+  const content = hero.querySelector('.relative.z-10');
+  if (content) {
+    gsap.fromTo(
+      content,
+      { opacity: 1, y: 0 },
+      {
+        opacity: 0, y: -80,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top top',
+          end: 'bottom 30%',
+          scrub: 1,
+        },
+      }
+    );
+  }
+}
+
 function runAll() {
   initReveals();
   initParallax();
+  initHeroCinematic();
   initClipReveal();
   initMagnetic();
   initVaporTransition();
