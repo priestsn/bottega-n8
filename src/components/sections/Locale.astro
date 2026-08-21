@@ -3,6 +3,7 @@
 // Sezione compatta a griglia, foto reali dall'interno del ristorante.
 interface Props { id?: string; }
 const { id = 'locale' } = Astro.props;
+import WatermarkImg from '../WatermarkImg.astro';
 const shots = [
   { img: '/photos/stock-interior-02.jpg', label: 'La sala', desc: 'Tavoli, luce calda e dettagli che raccontano la bottega.' },
   { img: '/photos/stock-interior-01.jpg', label: 'L’atmosfera', desc: 'Lanternie e calore: un angolo d’oriente a Bergamo.' },
@@ -25,12 +26,12 @@ const shots = [
       {shots.map((s, i) => (
         <figure class="group relative overflow-hidden rounded-2xl" data-reveal data-delay={String(i * 0.1)}>
           <div class="relative aspect-[4/5] overflow-hidden">
-            <img
+            <WatermarkImg
               src={s.img}
               alt={s.label}
+              class="h-full w-full"
               loading="lazy"
               decoding="async"
-              class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-nero/70 via-transparent to-transparent" aria-hidden="true"></div>
             <figcaption class="absolute inset-x-0 bottom-0 p-5">
