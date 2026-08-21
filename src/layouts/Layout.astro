@@ -2,10 +2,11 @@
 import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
 import Grain from '../components/Grain.astro';
+import SkinSwitcher from '../components/SkinSwitcher.astro';
 ---
 
 <!doctype html>
-<html lang="it">
+<html lang="it" data-skin="crema">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -56,6 +57,7 @@ import Grain from '../components/Grain.astro';
     <slot />
     <Grain />
     <CustomCursor />
+    <SkinSwitcher />
     <script type="module">
       import '../scripts/lenis-gsap.js';
     </script>

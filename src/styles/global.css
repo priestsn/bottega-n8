@@ -18,6 +18,54 @@
   --animate-marquee: marquee 28s linear infinite;
 }
 
+/* ============================================================
+   SKIN SYSTEM — override palette via [data-skin] sul <html>.
+   Default = "crema" (palette sopra). Le skin ridefiniscono
+   SOLO le custom properties, così tutti i componenti che
+   usano bg-antracite / text-ambra / etc. cambiano look
+   senza modifiche per-file. Aggiungi una skin = nuovo blocco.
+   ============================================================ */
+
+/* NOTTE — ristorante serale, tutto scuro + ambra accesa */
+[data-skin="notte"] {
+  --color-crema: #15151b;
+  --color-antracite: #0a0a0e;
+  --color-nero: #000000;
+  --color-ambra: #F2A65A;
+  --color-bianco: #EDE6DC;
+}
+
+/* AMBRA — high-contrast, crema calda + ambra dominante */
+[data-skin="ambra"] {
+  --color-crema: #FFF3E0;
+  --color-antracite: #2B1A0E;
+  --color-nero: #1A0F06;
+  --color-ambra: #C2741E;
+  --color-bianco: #FFFFFF;
+}
+
+/* GIADA — isometrica fredda (ispirazione orientale, verde tenue) */
+[data-skin="giada"] {
+  --color-crema: #EAF1EC;
+  --color-antracite: #1C2A24;
+  --color-nero: #0E1612;
+  --color-ambra: #7FA98B;
+  --color-bianco: #FBFDFB;
+}
+
+/* Transizione morbida quando si cambia skin */
+:root {
+  --skin-transition: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+body,
+body * {
+  transition: background-color var(--skin-transition), color var(--skin-transition),
+    border-color var(--skin-transition), fill var(--skin-transition);
+}
+@media (prefers-reduced-motion: reduce) {
+  body, body * { transition: none; }
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
