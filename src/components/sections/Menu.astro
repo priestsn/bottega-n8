@@ -4,6 +4,7 @@
 // Piatti e categorie dal pieghevole ufficiale, foto reali dal locale.
 interface Props { id?: string; }
 const { id = 'menu' } = Astro.props;
+import WatermarkImg from '../WatermarkImg.astro';
 
 const categories = [
   {
@@ -79,12 +80,12 @@ const active = categories[0].id;
           {c.dishes.map((d, i) => (
             <article class="group relative overflow-hidden rounded-2xl" data-menu-dish>
               <div class="relative aspect-[4/5] overflow-hidden">
-                <img
+                <WatermarkImg
                   src={d.img}
                   alt={d.name}
+                  class="h-full w-full"
                   loading="lazy"
                   decoding="async"
-                  class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-nero/85 via-nero/20 to-transparent" aria-hidden="true"></div>
                 <div class="absolute inset-x-0 bottom-0 p-6">

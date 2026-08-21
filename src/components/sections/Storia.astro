@@ -2,6 +2,7 @@
 interface Props { id?: string; }
 const { id = 'storia' } = Astro.props;
 const storiaImg = '/photos/stock-chef-01.jpg';
+import WatermarkImg from '../WatermarkImg.astro';
 ---
 
 <section id={id} class="relative w-full overflow-hidden bg-crema" data-st-section>
@@ -31,14 +32,15 @@ const storiaImg = '/photos/stock-chef-01.jpg';
 
     <!-- Image -->
     <div class="relative order-first min-h-[50svh] md:order-last" data-clip-reveal>
-      <img
-        src={storiaImg}
-        alt="Due chef al lavoro nella cucina di Bottega N.8, tra vapore e preparazioni"
-        class="absolute inset-0 h-full w-full object-cover"
-        data-parallax="0.1"
-        loading="lazy"
-        decoding="async"
-      />
+      <div class="absolute inset-0 h-full w-full">
+        <WatermarkImg
+          src={storiaImg}
+          alt="Due chef al lavoro nella cucina di Bottega N.8, tra vapore e preparazioni"
+          class="absolute inset-0 h-full w-full"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
       <div class="absolute inset-0 bg-gradient-to-t from-nero/30 to-transparent md:bg-gradient-to-r" aria-hidden="true"></div>
     </div>
   </div>
