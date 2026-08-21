@@ -61,13 +61,29 @@
 </div>
 
 <script is:inline>
+  function removePreloader() {
+    const pre = document.getElementById('preloader');
+    if (!pre || pre.dataset.done) return;
+    pre.dataset.done = '1';
+    pre.style.transition = 'opacity 0.4s ease, transform 0.6s ease';
+    pre.style.opacity = '0';
+    pre.style.transform = 'translateY(-100%)';
+    setTimeout(() => pre.remove(), 650);
+  }
+
+  // Sicurezza: se qualunque cosa va storta (GSAP non carica, errore JS),
+  // il preloader non deve MAI bloccare il sito. Timeout hard.
+  const HARD_TIMEOUT = 5000;
+  const hardTimer = setTimeout(removePreloader, HARD_TIMEOUT);
+
   function runPreloader() {
     const pre = document.getElementById('preloader');
-    if (!pre || window.__reduced) {
-      pre?.remove();
-      return;
-    }
+    if (!pre) return;
     const gsap = window.gsap;
+    // Fallback senza GSAP: mostra il sito subito.
+    if (!gsap) { removePreloader(); return; }
+    if (window.__reduced) { pre.remove(); clearTimeout(hardTimer); return; }
+
     const logo = document.getElementById('preloader-logo');
     const tag = document.getElementById('preloader-tag');
     const countEl = document.getElementById('preloader-count');
@@ -85,12 +101,8 @@
 
     const tl = gsap.timeline({
       onComplete: () => {
-        gsap.to(pre, {
-          yPercent: -100,
-          duration: 0.8,
-          ease: 'power4.inOut',
-          onComplete: () => pre.remove(),
-        });
+        clearTimeout(hardTimer);
+        removePreloader();
       },
     });
 
@@ -104,9 +116,17 @@
       .to([logo, tag, countEl, eight], { opacity: 0, y: -16, duration: 0.4, ease: 'power2.in' }, '-=0.2');
   }
 
-  if (window.gsap && document.readyState !== 'loading') {
-    runPreloader();
+  // GSAP è caricato dal modulo lenis-gsap.js (deferito). Se non pronto,
+  // riprova al prossimo frame finché non compare (max ~2s), poi fallback.
+  let tries = 0;
+  function waitGsap() {
+    if (window.gsap) { runPreloader(); return; }
+    if (tries++ > 120) { removePreloader(); return; } // ~2s, poi mostra il sito
+    requestAnimationFrame(waitGsap);
+  }
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', waitGsap);
   } else {
-    window.addEventListener('DOMContentLoaded', runPreloader);
+    waitGsap();
   }
 </script>
