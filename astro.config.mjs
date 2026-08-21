@@ -6,6 +6,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      // permette l'accesso via tunnel/cloudflare e domini esterni in preview
+      allowedHosts: true,
+    },
   },
   prefetch: true,
 });
