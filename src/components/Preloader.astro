@@ -4,60 +4,60 @@
 // Il cerchio ruota come un "8/∞" ideale: numero % al centro.
 ---
 
-<div id="preloader" class="fixed inset-0 z-[100] flex items-center justify-center bg-antracite" aria-hidden="true">
-  <div class="relative flex flex-col items-center gap-6">
-    <!-- Gauge circolare attorno al logo -->
-    <div class="relative flex size-44 items-center justify-center md:size-56">
-      <svg
-        id="preloader-gauge"
-        class="size-full -rotate-90"
-        viewBox="0 0 120 120"
+<div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-antracite" aria-hidden="true">
+  <!-- Logo sopra la gauge -->
+  <img src="/logo-light.png" alt="" class="h-14 w-auto opacity-0 md:h-16" id="preloader-logo" loading="eager" />
+
+  <!-- Gauge circolare con il numero % al centro -->
+  <div class="relative flex size-44 items-center justify-center md:size-56">
+    <svg
+      id="preloader-gauge"
+      class="size-full -rotate-90"
+      viewBox="0 0 120 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <!-- Traccia di fondo -->
+      <circle
+        cx="60" cy="60" r="52"
+        stroke="#2A2A32"
+        stroke-width="3"
+        stroke-linecap="round"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <!-- Traccia di fondo -->
-        <circle
-          cx="60" cy="60" r="52"
-          stroke="#2A2A32"
-          stroke-width="3"
-          stroke-linecap="round"
-          fill="none"
-        />
-        <!-- Traccia ambra che si riempie -->
-        <circle
-          id="preloader-gauge-bar"
-          cx="60" cy="60" r="52"
-          stroke="#DB934A"
-          stroke-width="3"
-          stroke-linecap="round"
-          fill="none"
-          stroke-dasharray="326.7"
-          stroke-dashoffset="326.7"
-        />
-      </svg>
-
-      <!-- Logo + contatore al centro del cerchio -->
-      <div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
-        <img src="/logo-light.png" alt="" class="h-16 w-auto opacity-0 md:h-20" id="preloader-logo" loading="eager" />
-        <div class="flex items-baseline gap-1">
-          <span class="font-anton text-4xl text-crema tabular-nums md:text-5xl" id="preloader-count">0</span>
-          <span class="font-poppins text-xs uppercase text-crema/50">%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Motivo 8/infinito (lemniscata di Bernoulli) che si disegna sotto la gauge -->
-    <svg id="preloader-eight" class="h-16 w-32 opacity-0 md:h-20 md:w-40" viewBox="0 0 200 100" fill="none" aria-hidden="true">
-      <path
-        id="preloader-eight-draw"
-        d="M100 50 C100 25 50 25 50 50 C50 75 150 75 150 50 C150 25 100 25 100 50 C100 75 50 75 50 50"
-        stroke="#DB934A" stroke-width="2" stroke-linecap="round"
-        stroke-dasharray="324" stroke-dashoffset="324"
+      />
+      <!-- Traccia ambra che si riempie -->
+      <circle
+        id="preloader-gauge-bar"
+        cx="60" cy="60" r="52"
+        stroke="#DB934A"
+        stroke-width="3"
+        stroke-linecap="round"
+        fill="none"
+        stroke-dasharray="326.7"
+        stroke-dashoffset="326.7"
       />
     </svg>
 
-    <span class="font-poppins text-[10px] uppercase tracking-[0.4em] text-crema/50 opacity-0" id="preloader-tag">assapora · condividi · ripeti</span>
+    <!-- Contatore % esattamente al centro del cerchio -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="relative inline-flex items-baseline font-anton text-5xl text-crema tabular-nums md:text-6xl" id="preloader-count-wrap">
+        <span id="preloader-count">0</span>
+        <span class="absolute left-full ml-0.5 font-poppins text-sm uppercase text-crema/50">%</span>
+      </div>
+    </div>
   </div>
+
+  <!-- Motivo infinito (lemniscata di Bernoulli simmetrica) che si disegna sotto -->
+  <svg id="preloader-eight" class="h-12 w-28 opacity-0 md:h-14 md:w-32" viewBox="0 0 200 80" fill="none" aria-hidden="true">
+    <path
+      id="preloader-eight-draw"
+      d="M100 40 C70 40 40 12 40 40 C40 68 70 40 100 40 C130 40 160 12 160 40 C160 68 130 40 100 40 Z"
+      stroke="#DB934A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+      stroke-dasharray="400" stroke-dashoffset="400"
+    />
+  </svg>
+
+  <span class="font-poppins text-[10px] uppercase tracking-[0.4em] text-crema/50 opacity-0" id="preloader-tag">assapora · condividi · ripeti</span>
 </div>
 
 <script is:inline>
@@ -92,7 +92,7 @@
     const eight = document.getElementById('preloader-eight');
     const eightDraw = document.getElementById('preloader-eight-draw');
     const CIRC = 326.7; // 2 * PI * 52
-    const EIGHT = 324;
+    const EIGHT = 400;
 
     const setProgress = () => {
       if (countEl) countEl.textContent = String(Math.round(countObj.val));
