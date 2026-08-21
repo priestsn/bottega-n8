@@ -6,16 +6,25 @@ import Vapor from '../Vapor.astro';
 ---
 
 <section id={id} class="relative min-h-[100svh] w-full overflow-hidden bg-nero" data-st-section>
-  <!-- Full-bleed photo with cinematic treatment -->
+  <!-- Full-bleed video hero (chef che prepara ravioli al vapore) con fallback foto -->
   <div class="absolute inset-0" data-clip-reveal>
+    <video
+      class="h-full w-full object-cover opacity-80"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="auto"
+      poster={heroImg}
+      data-parallax="0.12"
+    >
+      <source src="/video/hero-dumplings.mp4" type="video/mp4" />
+    </video>
     <img
       src={heroImg}
       alt="Cestello di bambù con ravioli al vapore, luce calda e drammatica"
-      class="h-full w-full object-cover opacity-80"
-      data-parallax="0.12"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
+      class="absolute inset-0 hidden h-full w-full object-cover opacity-80"
+      aria-hidden="true"
     />
     <div class="absolute inset-0 bg-gradient-to-b from-nero/70 via-nero/40 to-nero" aria-hidden="true"></div>
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_100%)]" aria-hidden="true"></div>
