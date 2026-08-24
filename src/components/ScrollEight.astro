@@ -1,63 +1,53 @@
 ---
-// Indicatore di scroll a forma di 8/infinito (la firma del brand).
-// Si traccia mentre scorri, si richiude al CTA finale.
-// Posizionato sul bordo destro, fuori dal flusso, discreto su mobile.
+// Firma del sito: un "8" che si disegna con lo scroll lungo il bordo destro,
+// si chiude in ∞ alla fine e riporta all'inizio (loop del brand).
 ---
-<div
+
+<svg
   id="scroll-eight"
-  class="fixed right-4 top-1/2 z-[80] hidden -translate-y-1/2 sm:block"
-  role="progressbar"
-  aria-label="Avanzamento della pagina"
-  aria-valuemin="0"
-  aria-valuemax="100"
+  class="pointer-events-none fixed right-4 top-1/2 z-40 hidden h-16 w-auto -translate-y-1/2 opacity-70 md:block"
+  viewBox="0 0 60 100"
+  fill="none"
+  aria-hidden="true"
 >
-  <svg class="h-20 w-10 md:h-24 md:w-12" viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Griglia del simbolo OTTO: due quadrati incastrati → 8/infinito -->
-    <g>
-      <!-- Traccia di fondo (finta) -->
-      <path
-        d="M30 10 C14 10 6 22 6 35 C6 48 14 57 30 60 C46 63 54 72 54 85 C54 98 46 110 30 110 C14 110 6 98 6 85"
-        stroke="currentColor" stroke-width="1" opacity="0.15"
-      />
-      <path
-        d="M30 10 C46 10 54 22 54 35 C54 48 46 57 30 60 C14 63 6 72 6 85 C6 98 14 110 30 110"
-        stroke="currentColor" stroke-width="1" opacity="0.15"
-      />
-      <!-- Traccia animata (8/infinito) -->
-      <path
-        id="eight-draw"
-        d="M30 10 C14 10 6 22 6 35 C6 48 14 57 30 60 C46 63 54 72 54 85 C54 98 46 110 30 110"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"
-        stroke-dasharray="154" stroke-dashoffset="154"
-      />
-    </g>
-    <style>
-      #scroll-eight { color: #DB934A; }
-    </style>
-  </svg>
-</div>
+  <path
+    class="eight-path"
+    d="M30 28 m-14 0 a14 20 0 1 0 28 0 a14 20 0 1 0 -28 0 M30 72 m-14 0 a14 20 0 1 0 28 0 a14 20 0 1 0 -28 0"
+    stroke="#DB934A"
+    stroke-width="2"
+    stroke-linecap="round"
+    fill="none"
+  />
+</svg>
 
-<script is:inline>
+<script>
   window.addEventListener('site:ready', () => {
-    const wrap = document.getElementById('scroll-eight');
-    const draw = document.getElementById('eight-draw');
-    if (!wrap || !draw || window.__reduced) return;
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    const reduced = (window as any).__reduced
+    const path = document.querySelector('.eight-path') as SVGPathElement | null
+    if (!path || reduced) return
 
-    // Traccia l'8 andando in giù; si "richiude" (riavvolge) tornando all'inizio
-    gsap.fromTo(draw, { strokeDashoffset: 154 }, {
+    const len = path.getTotalLength()
+    path.style.strokeDasharray = String(len)
+    path.style.strokeDashoffset = String(len)
+
+    // the 8 draws itself down the page, then completes into ∞ near the end
+    // progress boost: garantisce che il tratto raggiunga il 100% prima della fine pagina
+    gsap.fromTo(path, { strokeDashoffset: len }, {
       strokeDashoffset: 0,
       ease: 'none',
       scrollTrigger: {
-        trigger: document.body,
+        trigger: 'body',
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1,
-        onUpdate: (self) => {
-          wrap.setAttribute('aria-valuenow', Math.round(self.progress * 100));
+        scrub: 0.6,
+        onUpdate: (self: any) => {
+          // clamp progress: a 90% di scroll il disegno è completo
+          const boosted = Math.min(1, self.progress * 1.15)
+          path.style.strokeDashoffset = String(len * (1 - boosted))
         },
       },
-    });
-  });
+    })
+  })
 </script>

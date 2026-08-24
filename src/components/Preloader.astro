@@ -1,132 +1,120 @@
 ---
-// Preloader brand: gauge circolare (stile Magic UI AnimatedCircularProgressBar)
-// che si riempie con stroke-dashoffset mentre il logo fade-in, poi reveal verso l'alto.
-// Il cerchio ruota come un "8/∞" ideale: numero % al centro.
+// Preloader v4: simbolo ∞ che si disegna attorno al logo, video dei ravioli
+// visibile dentro il tratto dell'infinito (HTML video + clip-path CSS, niente
+// foreignObject). Parte al window load reale: niente blocco se GSAP tarda.
 ---
 
-<div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-antracite" aria-hidden="true">
-  <!-- Logo sopra la gauge -->
-  <img src="/logo-light.png" alt="" class="h-14 w-auto opacity-0 md:h-16" id="preloader-logo" loading="eager" />
+<div id="preloader" class="fixed inset-0 z-[100] flex items-center justify-center bg-antracite">
+  <!-- video di sfondo, molto scuro -->
+  <video
+    class="preloader-video absolute inset-0 h-full w-full object-cover"
+    style="opacity: 0.25"
+    src="/photos/hero-video.mp4"
+    autoplay muted loop playsinline preload="auto"
+  ></video>
+  <div class="absolute inset-0 bg-antracite/60"></div>
 
-  <!-- Gauge circolare con il numero % al centro -->
-  <div class="relative flex size-44 items-center justify-center md:size-56">
-    <svg
-      id="preloader-gauge"
-      class="size-full -rotate-90"
-      viewBox="0 0 120 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <!-- Traccia di fondo -->
-      <circle
-        cx="60" cy="60" r="52"
-        stroke="#2A2A32"
-        stroke-width="3"
-        stroke-linecap="round"
-        fill="none"
-      />
-      <!-- Traccia ambra che si riempie -->
-      <circle
-        id="preloader-gauge-bar"
-        cx="60" cy="60" r="52"
-        stroke="#DB934A"
-        stroke-width="3"
-        stroke-linecap="round"
-        fill="none"
-        stroke-dasharray="326.7"
-        stroke-dashoffset="326.7"
-      />
-    </svg>
-
-    <!-- Contatore % esattamente al centro del cerchio -->
-    <div class="absolute inset-0 flex items-center justify-center">
-      <div class="relative inline-flex items-baseline font-anton text-5xl text-crema tabular-nums md:text-6xl" id="preloader-count-wrap">
-        <span id="preloader-count">0</span>
-        <span class="absolute left-full ml-0.5 font-poppins text-sm uppercase text-crema/50">%</span>
+  <div class="preloader-core relative flex flex-col items-center">
+    <div class="inf-wrap relative" style="height: clamp(180px, 28vh, 256px); aspect-ratio: 2 / 1;">
+      <svg viewBox="0 0 200 100" fill="none" class="absolute inset-0 h-full w-full" aria-hidden="true">
+        <defs>
+          <mask id="inf-mask">
+            <path
+              d="M60 50 C60 22, 96 22, 100 50 C104 78, 140 78, 140 50 C140 22, 104 22, 100 50 C96 78, 60 78, 60 50 Z"
+              stroke="#fff" stroke-width="26" stroke-linecap="round" fill="none"
+            />
+          </mask>
+        </defs>
+        <path
+          class="inf-track"
+          d="M60 50 C60 22, 96 22, 100 50 C104 78, 140 78, 140 50 C140 22, 104 22, 100 50 C96 78, 60 78, 60 50 Z"
+          stroke="#DB934A" stroke-opacity="0.15" stroke-width="2" fill="none"
+        />
+      </svg>
+      <!-- video ritagliato dentro il tratto dell'infinito (CSS clip-path, robusto ovunque) -->
+      <div class="inf-clip absolute inset-[-14%]" style="clip-path: path('M100 75 C100 33, 172 33, 200 75 C228 117, 300 117, 300 75 C300 33, 228 33, 200 75 C172 117, 100 117, 100 75 Z');">
+        <video
+          src="/photos/hero-video.mp4"
+          autoplay muted loop playsinline preload="auto"
+          style="position:absolute; left:-25%; top:-50%; width:150%; height:200%; object-fit:cover;"
+        ></video>
+        <div class="absolute inset-0" style="background: rgba(34,34,40,0.45);"></div>
       </div>
+      <svg viewBox="0 0 200 100" fill="none" class="absolute inset-0 h-full w-full" aria-hidden="true">
+        <path
+          class="inf-stroke"
+          d="M60 50 C60 22, 96 22, 100 50 C104 78, 140 78, 140 50 C140 22, 104 22, 100 50 C96 78, 60 78, 60 50 Z"
+          stroke="#DB934A" stroke-width="2.5" stroke-linecap="round" fill="none"
+        />
+      </svg>
     </div>
+
+    <p class="mt-8 overflow-hidden"><span class="preloader-logo block font-display text-2xl uppercase tracking-[0.35em] text-crema">Bottega&nbsp;N.8</span></p>
+    <p class="mt-2 text-[10px] uppercase tracking-[0.6em] text-ambra">Bergamo</p>
+    <p class="preloader-count mt-6 font-mono text-xs tracking-widest text-crema/40">00</p>
   </div>
-
-  <!-- Motivo infinito (lemniscata di Bernoulli simmetrica) che si disegna sotto -->
-  <svg id="preloader-eight" class="h-12 w-28 opacity-0 md:h-14 md:w-32" viewBox="0 0 200 80" fill="none" aria-hidden="true">
-    <path
-      id="preloader-eight-draw"
-      d="M100 40 C70 40 40 12 40 40 C40 68 70 40 100 40 C130 40 160 12 160 40 C160 68 130 40 100 40 Z"
-      stroke="#DB934A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-      stroke-dasharray="400" stroke-dashoffset="400"
-    />
-  </svg>
-
-  <span class="font-poppins text-[10px] uppercase tracking-[0.4em] text-crema/50 opacity-0" id="preloader-tag">assapora · condividi · ripeti</span>
 </div>
 
-<script is:inline>
-  function removePreloader() {
-    const pre = document.getElementById('preloader');
-    if (!pre || pre.dataset.done) return;
-    pre.dataset.done = '1';
-    pre.style.transition = 'opacity 0.4s ease, transform 0.6s ease';
-    pre.style.opacity = '0';
-    pre.style.transform = 'translateY(-100%)';
-    setTimeout(() => pre.remove(), 650);
+<style>
+  .inf-stroke {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
   }
+</style>
 
-  // Sicurezza: se qualunque cosa va storta (GSAP non carica, errore JS),
-  // il preloader non deve MAI bloccare il sito. Timeout hard.
-  const HARD_TIMEOUT = 5000;
-  const hardTimer = setTimeout(removePreloader, HARD_TIMEOUT);
-
+<script>
   function runPreloader() {
-    const pre = document.getElementById('preloader');
-    if (!pre) return;
-    const gsap = window.gsap;
-    // Fallback senza GSAP: mostra il sito subito.
-    if (!gsap) { removePreloader(); return; }
-    if (window.__reduced) { pre.remove(); clearTimeout(hardTimer); return; }
+    const gsap = (window as any).gsap
+    const reduced = (window as any).__reduced
+    const pre = document.getElementById('preloader')
+    if (!pre) return
 
-    const logo = document.getElementById('preloader-logo');
-    const tag = document.getElementById('preloader-tag');
-    const countEl = document.getElementById('preloader-count');
-    const gaugeBar = document.getElementById('preloader-gauge-bar');
-    const countObj = { val: 0 };
-    const eight = document.getElementById('preloader-eight');
-    const eightDraw = document.getElementById('preloader-eight-draw');
-    const CIRC = 326.7; // 2 * PI * 52
-    const EIGHT = 400;
+    if (reduced || !gsap) {
+      pre.remove()
+      window.dispatchEvent(new CustomEvent('preloader:done'))
+      return
+    }
 
-    const setProgress = () => {
-      if (countEl) countEl.textContent = String(Math.round(countObj.val));
-      if (gaugeBar) gaugeBar.setAttribute('stroke-dashoffset', String(CIRC * (1 - countObj.val / 100)));
-    };
+    const path = pre.querySelector('.inf-stroke') as SVGPathElement
+    const len = path.getTotalLength()
+    path.style.strokeDasharray = String(len)
+    path.style.strokeDashoffset = String(len)
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        clearTimeout(hardTimer);
-        removePreloader();
-      },
-    });
+    const countEl = pre.querySelector('.preloader-count') as HTMLElement
 
-    tl.to(logo, { opacity: 1, duration: 0.5, ease: 'power2.out' })
-      // L'8/infinito si disegna mentre la gauge si riempie
-      .to(eight, { opacity: 1, duration: 0.4, ease: 'power2.out' }, '-=0.2')
-      .to(eightDraw, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' }, '-=0.4')
-      .to(countObj, { val: 100, duration: 1.6, ease: 'power2.inOut', onUpdate: setProgress }, '-=0.1')
-      .to(tag, { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.6')
-      .to({}, { duration: 0.4 })
-      .to([logo, tag, countEl, eight], { opacity: 0, y: -16, duration: 0.4, ease: 'power2.in' }, '-=0.2');
+    // il tratto dell'infinito si disegna; il logo sale; il contatore corre.
+    // Poi tutto si espande e dissolve nell'hero.
+    const tl = gsap.timeline()
+    tl.fromTo('.preloader-logo', { yPercent: 120 }, { yPercent: 0, duration: 0.8, ease: 'power4.out' }, 0.2)
+      .to(path, { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' }, 0)
+      .to({ v: 0 }, {
+        v: 100,
+        duration: 2,
+        ease: 'power2.inOut',
+        onUpdate: function () {
+          const v = Math.round((this.targets()[0] as any).v)
+          countEl.textContent = String(v).padStart(2, '0')
+        },
+      }, 0)
+      .to('.preloader-count', { opacity: 0, duration: 0.4 })
+      .to('.preloader-core', { scale: 1.6, opacity: 0, filter: 'blur(6px)', duration: 0.9, ease: 'power3.in' }, '-=0.1')
+      .to(pre.querySelector('.preloader-video'), { opacity: 0, scale: 1.08, duration: 0.9, ease: 'power2.in' }, '<')
+      .to(pre, {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        onComplete: () => pre.remove(),
+      }, '-=0.35')
+      .add(() => window.dispatchEvent(new CustomEvent('preloader:done')), '-=0.45')
   }
 
-  // GSAP è caricato dal modulo lenis-gsap.js (deferito). Se non pronto,
-  // riprova al prossimo frame finché non compare (max ~2s), poi fallback.
-  let tries = 0;
-  function waitGsap() {
-    if (window.gsap) { runPreloader(); return; }
-    if (tries++ > 120) { removePreloader(); return; } // ~2s, poi mostra il sito
-    requestAnimationFrame(waitGsap);
-  }
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', waitGsap);
+  // Attende che GSAP sia esposto dal layout, poi parte. Fallback: dopo 4s va comunque.
+  let started = false
+  const start = () => { if (!started) { started = true; runPreloader() } }
+  if ((window as any).gsap) {
+    start()
   } else {
-    waitGsap();
+    document.addEventListener('site:ready', start)
+    setTimeout(start, 4000) // fallback anti-blocco
   }
 </script>

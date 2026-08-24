@@ -1,162 +1,100 @@
 ---
-// Galleria Lens — fila marquee di foto reali con zoom-lente sull'hover.
-// Pattern portato da Magic UI "Lens" (21st.dev) in vanilla JS + GSAP, no React.
-// Le foto sono immagini stock coerenti (ravioli, dim sum, ambienti).
-// Galleria: foto uniche NON ripetute nel menù (dietro le quinte, atmosfera, varianti).
-// Evita la doppia visione degli stessi piatti nella stessa pagina.
-const photos = [
-  { src: '/photos/stock-dumpling-03.jpg', label: 'In cucina', zoom: 1.7 },
-  { src: '/photos/stock-dumpling-01.jpg', label: 'Al vapore', zoom: 1.7 },
-  { src: '/photos/stock-dumpling-07.jpg', label: 'Ciotole della casa', zoom: 1.6 },
-  { src: '/photos/stock-dumpling-02.jpg', label: 'Dim sum', zoom: 1.6 },
-  { src: '/photos/stock-dumpling-05.jpg', label: 'La ricetta dei ravioli', zoom: 1.7 },
-  { src: '/photos/stock-dumpling-06.jpg', label: 'Ravioli', zoom: 1.6 },
-  { src: '/photos/stock-dumpling-04.jpg', label: 'Dolce', zoom: 1.6 },
-  { src: '/photos/stock-dumpling-01.jpg', label: 'Dal vivo', zoom: 1.6 },
-  { src: '/photos/stock-interior-05.jpg', label: 'Dalla cucina', zoom: 1.6 },
-];
-// Duplica per lo scorrimento infinito
-const row = [...photos, ...photos];
-import WatermarkImg from './WatermarkImg.astro';
+// Galleria v3: due marquee contrapposti + foto vive (Ken Burns) intercalate
+const rigaA = [
+  '/photos/interno-1.jpg',
+  '/photos/menu-dip.jpg',
+  '/photos/bao-croccanti.jpg',
+  '/photos/broll-2.png',
+  '/photos/interno-3.jpg',
+  '/photos/menu-noodles.jpg',
+]
+const rigaB = [
+  '/photos/takeaway-borsa.jpg',
+  '/photos/ravioli-sfoglia-nera.jpg',
+  '/photos/broll-1.png',
+  '/photos/interno-4.jpg',
+  '/photos/menu-bao-aperto.jpg',
+  '/photos/menu-te.jpg',
+]
 ---
 
-<section id="galleria" class="relative w-full overflow-hidden bg-antracite py-24 md:py-32" data-st-section>
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="mb-14 text-center md:mb-20">
-      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>La nostra cucina</span>
-      <h2 class="mt-4 font-anton text-[clamp(2.4rem,7vw,5rem)] uppercase text-crema" data-split>
-        Dal vivo
-      </h2>
-      <p class="mx-auto mt-6 max-w-2xl font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-crema/60" data-reveal data-delay="0.2">
-        Passa sopra o tocca i piatti per guardarli da vicino.
-      </p>
-    </div>
+<section id="galleria" class="overflow-hidden bg-antracite py-24">
+  <p class="mb-12 px-6 text-center text-xs uppercase tracking-[0.4em] text-ambra">Dalla nostra cucina</p>
+
+  <div class="marquee-track flex w-max gap-5 will-change-transform" data-marquee data-skew>
+    {
+      [...rigaA, ...rigaA].map((src) => (
+        <figure class="lens group relative h-[260px] w-[340px] shrink-0 overflow-hidden rounded-sm sm:h-[300px] sm:w-[400px]">
+          <img src={src} alt="Bottega N.8 — piatto e atmosfera" class="h-full w-full object-cover transition-all duration-[900ms] ease-out group-hover:scale-110" loading="lazy" draggable="false" />
+          <div class="lens-ring pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            <div class="absolute inset-6 rounded-full border border-crema/50 backdrop-brightness-[1.15]" />
+          </div>
+        </figure>
+      ))
+    }
   </div>
 
-  <div class="lens-marquee relative" data-lens-marquee>
-    <div class="lens-track flex w-max items-center gap-6 px-6" data-lens-track>
-      {row.map((p, i) => (
-        <figure class="lens-card group relative h-[280px] w-[340px] flex-shrink-0 overflow-hidden rounded-2xl md:h-[340px] md:w-[420px]"
-          data-lens-card role="group" aria-label={p.label} tabindex="0">
-          <!-- immagine base -->
-          <WatermarkImg
-            src={p.src}
-            alt={p.label}
-            class="lens-base absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-          />
-          <!-- layer zoom con maschera radiale (lente) -->
-          <div class="lens-zoom absolute inset-0 pointer-events-none" data-lens-zoom style={{ [`--zoom`]: p.zoom }}>
-            <WatermarkImg
-              src={p.src}
-              alt=""
-              class="lens-zoom-img absolute inset-0 h-full w-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <figcaption class="absolute bottom-4 left-4 z-30 rounded-full bg-nero/70 px-4 py-1.5 font-poppins text-xs uppercase tracking-widest text-crema backdrop-blur-sm">
-            {p.label}
+  <div class="marquee-track-rev mt-5 flex w-max gap-5 will-change-transform" data-marquee-rev data-skew>
+    {
+      [...rigaB, ...rigaB].map((src) => (
+        <figure class={`group relative h-[260px] w-[340px] shrink-0 overflow-hidden rounded-sm sm:h-[300px] sm:w-[400px]`}>
+          <img src={src} alt="Bottega N.8 — piatto e atmosfera" class="h-full w-full object-cover transition-all duration-[900ms] ease-out group-hover:scale-110" loading="lazy" draggable="false" />
+          <figcaption class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-antracite/90 to-transparent p-4 text-xs uppercase tracking-[0.25em] text-crema/80 transition-transform duration-500 group-hover:translate-y-0">
+            Bottega N.8
           </figcaption>
         </figure>
-      ))}
-    </div>
-    <!-- sfumature ai bordi -->
-    <div class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-antracite to-transparent z-20"></div>
-    <div class="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-antracite to-transparent z-20"></div>
+      ))
+    }
   </div>
 </section>
 
-<style is:global>
-  /* Traccia: scorrimento continuo via CSS keyframes */
-  .lens-track {
-    will-change: transform;
-    animation: lens-marquee 60s linear infinite;
-  }
-  [data-lens-marquee]:hover .lens-track {
-    animation-play-state: paused;
-  }
-  @keyframes lens-marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  /* Card: base */
-  .lens-card {
-    cursor: zoom-in;
-  }
-  .lens-base {
-    transition: filter 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* Layer zoom: inizialmente nascosto (mask vuota), gestito da JS */
-  .lens-zoom {
-    --lens-x: 0px;
-    --lens-y: 0px;
-    --lens-size: 0px;
-    opacity: 0;
-    z-index: 10;
-    -webkit-mask-image: radial-gradient(circle var(--lens-size) at var(--lens-x) var(--lens-y), #000 100%, transparent 100%);
-    mask-image: radial-gradient(circle var(--lens-size) at var(--lens-x) var(--lens-y), #000 100%, transparent 100%);
-    transition: opacity 0.25s ease;
-  }
-  .lens-card.is-zooming .lens-zoom {
-    opacity: 1;
-  }
-  .lens-zoom-img {
-    transform: scale(var(--zoom, 1.6));
-    transform-origin: var(--lens-x) var(--lens-y);
-  }
-</style>
-
 <script>
-  // Galleria Lens — porta del pattern Magic UI in vanilla JS.
-  // Non interfere con mobile (no hover) né con prefers-reduced-motion.
-  (function () {
-    if (window.__reduced) return;
-    if (window.matchMedia('(hover: none)').matches) return;
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    const reduced = (window as any).__reduced
+    if (reduced) return
 
-    const cards = document.querySelectorAll('[data-lens-card]');
-    cards.forEach((card) => {
-      const zoom = card.querySelector('.lens-zoom');
-      const zoomImg = card.querySelector('.lens-zoom-img');
-      if (!zoom || !zoomImg) return;
+    const makeMarquee = (sel: string, dir = 1, dur = 55) => {
+      const track = document.querySelector(sel) as HTMLElement
+      if (!track) return null
+      const half = () => track.scrollWidth / 2
+      const tween = gsap.to(track, {
+        x: -half() * dir,
+        duration: dur,
+        ease: 'none',
+        repeat: -1,
+        modifiers: {
+          x: (x: number) => {
+            const h = track.scrollWidth / 2
+            return String(dir > 0 ? gsap.utils.wrap(-h, 0, x) : gsap.utils.wrap(0, h, x))
+          },
+        },
+      })
+      track.querySelectorAll('figure').forEach((f) => {
+        f.addEventListener('mouseenter', () => gsap.to(tween, { timeScale: 0.1, duration: 0.4 }))
+        f.addEventListener('mouseleave', () => gsap.to(tween, { timeScale: 1, duration: 0.6 }))
+      })
+      ScrollTrigger.create({
+        trigger: '#galleria',
+        start: 'top bottom',
+        end: 'bottom top',
+        onToggle: (self: any) => tween.paused(!self.isActive),
+      })
+      return tween
+    }
 
-      let raf = null;
+    // la seconda riga reagisce alla velocità dello scroll: accelera quando scendi veloce
+    const rev = makeMarquee('[data-marquee-rev]', -1, 62)
+    if (rev) {
+      let boostST = ScrollTrigger.create({
+        onUpdate: (self: any) => {
+          const v = Math.min(4, Math.abs(self.getVelocity()) / 800)
+          gsap.to(rev, { timeScale: 1 + v, duration: 0.3, overwrite: 'auto' })
+        },
+      })
+    }
 
-      function move(e) {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        // lens size animata via CSS var (transizione fluida)
-        zoom.style.setProperty('--lens-x', x + 'px');
-        zoom.style.setProperty('--lens-y', y + 'px');
-        zoom.style.setProperty('--lens-size', '150px');
-        zoomImg.style.transformOrigin = x + 'px ' + y + 'px';
-      }
-
-      function enter() {
-        card.classList.add('is-zooming');
-      }
-      function leave() {
-        card.classList.remove('is-zooming');
-        zoom.style.setProperty('--lens-size', '0px');
-      }
-      function moveRaf(e) {
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          move(e);
-          raf = null;
-        });
-      }
-
-      card.addEventListener('mouseenter', enter);
-      card.addEventListener('mouseleave', leave);
-      card.addEventListener('mousemove', moveRaf);
-      // accessibilità tastiera
-      card.addEventListener('focus', enter);
-      card.addEventListener('blur', leave);
-    });
-  })();
+    makeMarquee('[data-marquee]', 1, 55)
+  })
 </script>

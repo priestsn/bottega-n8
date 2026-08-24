@@ -1,72 +1,79 @@
 ---
-interface Props { id?: string; }
-const { id = 'hero' } = Astro.props;
-const heroImg = '/photos/real-xiaolongbao-1.jpg';
-import Vapor from '../Vapor.astro';
+// Hero v3: scroll-expansion — il video parte come card centrata (rounded) e si
+// espande a full-screen con lo scroll; il titolo si blenda dentro il media.
+// Ispirato a 21st.dev scroll-expansion-hero (arunachalam), reimplementato in GSAP.
 ---
 
-<section id={id} class="relative min-h-[100svh] w-full overflow-hidden bg-nero" data-st-section>
-  <!-- Full-bleed video hero (chef che prepara ravioli al vapore) con fallback foto -->
-  <div class="absolute inset-0" data-clip-reveal>
-    <video
-      class="h-full w-full object-cover opacity-80"
-      autoplay
-      loop
-      muted
-      playsinline
-      preload="auto"
-      poster={heroImg}
-      data-parallax="0.12"
-    >
-      <source src="/video/hero-dumplings.mp4" type="video/mp4" />
-    </video>
-    <img
-      src={heroImg}
-      alt="Cestello di bambù con ravioli al vapore, luce calda e drammatica"
-      class="absolute inset-0 hidden h-full w-full object-cover opacity-80"
-      aria-hidden="true"
-    />
-    <div class="absolute inset-0 bg-gradient-to-b from-nero/70 via-nero/40 to-nero" aria-hidden="true"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_100%)]" aria-hidden="true"></div>
-  </div>
+<section id="hero" class="hero-expand relative flex items-start justify-center bg-antracite" data-hero-section style="min-height: 200svh">
+  <!-- sfondo fisso: gradiente brand -->
+  <div class="fixed inset-0 -z-10 bg-antracite"></div>
 
-  <!-- Vapore che sale dal cestello — tema ricorrente -->
-  <div class="absolute inset-0 z-[6] opacity-90" aria-hidden="true">
-    <Vapor variant="steam" tone="light" density={3} className="h-full" />
-  </div>
-
-  <!-- Content -->
-  <div class="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 text-center">
-    <div class="mb-8" data-reveal>
-      <img
-        src="/logo-light.png"
-        alt="Bottega N.8"
-        class="mx-auto h-28 w-auto md:h-40"
-        loading="eager"
-        decoding="async"
-      />
+  <!-- contenitore sticky: qui dentro il media si espande -->
+  <div class="sticky top-0 flex h-[100svh] w-full items-start justify-center overflow-hidden pt-24 sm:pt-28" data-hero-sticky>
+    <div class="hero-media relative overflow-hidden rounded-3xl shadow-2xl" data-hero-media style="width: min(62vw, 900px); aspect-ratio: 16/10;">
+      <video
+        class="h-full w-full scale-110 object-cover"
+        src="/photos/hero-video.mp4"
+        autoplay muted loop playsinline preload="auto"
+        aria-label="Ravioli in olio piccante — Bottega N.8"
+      ></video>
+      <!-- velo scuro + blend del testo -->
+      <div class="absolute inset-0 bg-antracite/40 transition-opacity duration-300" data-hero-overlay></div>
+      <div class="absolute inset-0 flex flex-col items-start justify-end p-8 sm:p-12" data-hero-text>
+        <p class="text-xs uppercase tracking-[0.5em] text-ambra">Ristorante · Take away · Bergamo</p>
+        <h1 class="mt-2 font-display uppercase leading-[0.9] text-crema text-[11vw] sm:text-[7vw]" style="mix-blend-mode: difference;">
+          Un viaggio<br /><span class="text-ambra">di gusto</span>
+        </h1>
+      </div>
     </div>
 
-    <h1 class="font-anton text-[clamp(2.2rem,9vw,6.5rem)] uppercase leading-[1.02] tracking-wide text-crema text-balance" data-reveal data-delay="0.15">
-      Un viaggio di gusto,<br class="hidden sm:block" /> senza lasciare la città.
-    </h1>
-
-    <p class="mt-8 font-poppins text-[clamp(0.9rem,2.5vw,1.3rem)] font-medium uppercase tracking-[0.35em] text-ambra" data-reveal data-delay="0.3">
-      Artigianalità italiana, ispirazione orientale
-    </p>
-
-    <a
-      href="#storia"
-      class="group mt-16 inline-flex flex-col items-center gap-3 text-crema/70 transition-colors hover:text-ambra"
-      data-reveal data-delay="0.5"
-    >
-      <span class="font-poppins text-xs uppercase tracking-[0.3em]">Scorri per iniziare</span>
-      <svg class="scroll-arrow h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 4v16m0 0l-6-6m6 6l6-6" />
-      </svg>
-    </a>
+    <!-- hint scroll -->
+    <div class="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 text-crema/80" data-scroll-hint>
+      <p class="mb-2 text-xs uppercase tracking-[0.35em]">Scorri per entrare</p>
+      <div class="scroll-hint mx-auto flex h-10 w-6 items-start justify-center rounded-full border border-crema/50 p-1.5">
+        <span class="dot block h-2 w-1 rounded-full bg-ambra"></span>
+      </div>
+    </div>
   </div>
-
-  <!-- Bottom edge fade to next section -->
-  <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-crema to-transparent" aria-hidden="true"></div>
 </section>
+
+<script>
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    if ((window as any).__reduced || !gsap) return
+
+      const section = document.querySelector('[data-hero-section]')!
+      const sticky = document.querySelector('[data-hero-sticky]')!
+      const media = document.querySelector('[data-hero-media]')! as HTMLElement
+      const overlay = document.querySelector('[data-hero-overlay]')! as HTMLElement
+      const text = document.querySelector('[data-hero-text]')! as HTMLElement
+      const hint = document.querySelector('[data-scroll-hint]')! as HTMLElement
+
+      // espansione: da card centrata → full bleed
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
+      })
+
+      tl.fromTo(
+        media,
+        { width: 'min(62vw, 900px)', borderRadius: '1.5rem' },
+        { width: '100vw', height: '100vh', aspectRatio: 'auto', borderRadius: '0rem', ease: 'none' }
+      )
+        // il velo scuro svanisce: il video diventa pieno
+        .to(overlay, { opacity: 0.15, ease: 'none' }, 0)
+        // il testo sale e sfuma mentre il video cresce
+        .to(text, { yPercent: -60, opacity: 0, ease: 'power1.in' }, 0)
+        // hint sparisce subito
+        .to(hint, { opacity: 0, duration: 0.08 }, 0)
+
+      // dot animato
+      gsap.to('.scroll-hint .dot', { y: 14, repeat: -1, yoyo: true, duration: 0.9, ease: 'sine.inOut' })
+})
+</script>

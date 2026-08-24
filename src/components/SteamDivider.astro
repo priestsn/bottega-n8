@@ -1,0 +1,112 @@
+---
+// SteamTransition v2: nube di vapore DENSE. 6 layer sovrapposti con alpha alta,
+// blobs multipli per tile, parallasse forte → nel scroll ci si tuffa in un muro di vapore.
+---
+
+<div
+  id="steam-divider"
+  class="pointer-events-none relative z-[5] h-[55svh] overflow-hidden"
+  aria-hidden="true"
+  style="background: linear-gradient(to bottom, var(--from-color, #222228), var(--to-color, #222228))"
+  data-from="#F8EADB"
+  data-to="#222228"
+>
+  <div class="steam-layer absolute inset-0 bottom-[-10%] h-[170%]" data-steam="0"></div>
+  <div class="steam-layer absolute inset-x-0 bottom-[-15%] h-[180%]" data-steam="1"></div>
+  <div class="steam-layer absolute inset-x-0 bottom-[-20%] h-[190%]" data-steam="2"></div>
+  <div class="steam-layer absolute inset-x-0 bottom-[-25%] h-[200%]" data-steam="3"></div>
+  <div class="steam-layer absolute inset-x-0 bottom-[-30%] h-[210%]" data-steam="4"></div>
+  <div class="steam-layer absolute inset-x-0 bottom-[-35%] h-[220%]" data-steam="5"></div>
+</div>
+
+<script>
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const reduced = (window as any).__reduced
+    if (reduced || !gsap) return
+
+    // texture densa e ORIZZONTALMENTE SEAMLESS: ogni blob è disegnato anche a x±size
+    function cloudTexture(size: number, density: number, alpha: number): string {
+      const c = document.createElement('canvas')
+      c.width = size; c.height = size
+      const ctx = c.getContext('2d')!
+      const blob = (x: number, y: number, r: number, a: number) => {
+        // disegna il blob anche sui vicini (x e y) → tile seamless su entrambi gli assi
+        for (const dx of [-size, 0, size]) {
+          for (const dy of [-size, 0, size]) {
+            const g = ctx.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, r)
+            g.addColorStop(0, `rgba(248,234,219,${a})`)
+            g.addColorStop(0.55, `rgba(248,234,219,${a * 0.45})`)
+            g.addColorStop(1, 'rgba(248,234,219,0)')
+            ctx.fillStyle = g
+            ctx.beginPath(); ctx.arc(x + dx, y + dy, r, 0, Math.PI * 2); ctx.fill()
+          }
+        }
+      }
+      for (let i = 0; i < density; i++) {
+        const x = Math.random() * size
+        const y = Math.random() * size
+        const r = size * (0.06 + Math.random() * 0.22)
+        blob(x, y, r, alpha)
+      }
+      for (let i = 0; i < density / 2; i++) {
+        const x = Math.random() * size
+        const y = Math.random() * size
+        const r = size * (0.03 + Math.random() * 0.07)
+        blob(x, y, r, alpha * 1.3)
+      }
+      return c.toDataURL()
+    }
+
+    // il divider deve fondersi: sfondo = gradiente dal colore della sezione sopra a quella sotto
+    document.querySelectorAll('#steam-divider, #steam-divider ~ #steam-divider').forEach((divider) => {
+      const d = divider as HTMLElement
+      const prev = d.previousElementSibling as HTMLElement | null
+      const next = d.nextElementSibling as HTMLElement | null
+      const bgOf = (el: HTMLElement | null) => {
+        let cur: HTMLElement | null = el
+        while (cur) {
+          const bg = getComputedStyle(cur).backgroundColor
+          if (bg && !bg.includes('0, 0, 0, 0') && bg !== 'rgba(0, 0, 0, 0)') return bg
+          cur = cur.parentElement
+        }
+        return '#222228'
+      }
+      d.style.setProperty('--from-color', bgOf(prev))
+      d.style.setProperty('--to-color', bgOf(next))
+    })
+
+    document.querySelectorAll('[data-steam]').forEach((el) => {
+      const idx = parseInt(el.getAttribute('data-steam')!, 10)
+      const alphas = [0.30, 0.24, 0.18, 0.13, 0.09, 0.06]
+      ;(el as HTMLElement).style.backgroundImage = `url(${cloudTexture(1100, 46, alphas[idx])})`
+      ;(el as HTMLElement).style.backgroundRepeat = 'repeat'
+      ;(el as HTMLElement).style.backgroundSize = `${90 + idx * 22}% auto`
+      ;(el as HTMLElement).style.backgroundPositionY = 'center'
+      // blur leggero sui layer vicini (definiti), forte sui lontani (atmosfera)
+      ;(el as HTMLElement).style.filter = `blur(${[0, 2, 4, 7, 11, 16][idx]}px)`
+      // maschera verticale: il vapore sfuma dentro le sezioni adiacenti, mai un bordo netto
+      const mask = 'linear-gradient(to bottom, transparent 0%, black 30%, black 85%, transparent 100%)'
+      ;(el as HTMLElement).style.maskImage = mask
+      ;(el as HTMLElement).style.webkitMaskImage = mask
+    })
+
+    // parallasse forte: i layer vicini salgono veloci, i lontani lenti → profondità da tuffo
+    gsap.utils.toArray<HTMLElement>('.steam-layer').forEach((layer) => {
+      const idx = parseInt(layer.getAttribute('data-steam')!, 10)
+      gsap.fromTo(layer,
+        { yPercent: [70, 58, 47, 37, 28, 20][idx] },
+        {
+          yPercent: [-45, -52, -58, -63, -67, -70][idx],
+          ease: 'none',
+          scrollTrigger: { trigger: '#steam-divider', start: 'top bottom', end: 'bottom top', scrub: true },
+        }
+      )
+    })
+
+    // drift orizzontale continuo, direzioni alternate
+    document.querySelectorAll('.steam-layer').forEach((el, i) => {
+      gsap.to(el, { backgroundPositionX: `${i % 2 ? '-' : ''}${260 + i * 110}px`, duration: 18 + i * 7, repeat: -1, yoyo: true, ease: 'sine.inOut' })
+    })
+  })
+</script>

@@ -1,0 +1,42 @@
+---
+// Header fisso con logo ufficiale OTTO (logo-light.png, trasparente).
+// Appare dopo il preloader, si nasconde allo scroll giù e riappare risalendo.
+---
+
+<header id="site-header" class="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-4 opacity-0 transition-transform duration-500 sm:px-10" data-header>
+  <a href="#hero" aria-label="Bottega N.8 — home" class="flex items-center">
+    <img
+      src="/photos/logo-light.png"
+      alt="Bottega N.8"
+      class="h-14 w-auto sm:h-16"
+      width="211"
+      height="144"
+    />
+  </a>
+  <nav class="flex items-center gap-5 text-[11px] uppercase tracking-[0.3em] text-crema/70">
+    <a href="#menu" class="hidden transition-colors hover:text-ambra md:inline">Menu</a>
+    <a href="#galleria" class="hidden transition-colors hover:text-ambra md:inline">Galleria</a>
+    <a href="tel:+39035297334" class="bg-ambra px-4 py-2 font-display text-[11px] uppercase tracking-[0.25em] text-antracite transition-transform duration-300 hover:-translate-y-0.5">Prenota</a>
+  </nav>
+</header>
+
+<script>
+  window.addEventListener('preloader:done', () => {
+    const header = document.querySelector('[data-header]') as HTMLElement | null
+    if (!header) return
+    header.style.transition = 'opacity 0.6s ease'
+    header.style.opacity = '1'
+
+    let lastY = 0
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y > lastY && y > 200) {
+        header.style.transform = 'translateY(-110%)'
+      } else {
+        header.style.transform = 'translateY(0)'
+      }
+      lastY = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+  })
+</script>

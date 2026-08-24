@@ -1,158 +1,150 @@
 ---
-// Menu interattivo — categorie con foto dei piatti reali.
-// Modello a tab: l'utente sceglie una categoria, le card dei piatti si animano.
-// Piatti e categorie dal pieghevole ufficiale, foto reali dal locale.
-interface Props { id?: string; }
-const { id = 'menu' } = Astro.props;
-import WatermarkImg from '../WatermarkImg.astro';
-
-const categories = [
+const piatti = [
   {
-    id: 'ravioli',
-    label: 'Ravioli al vapore',
-    dishes: [
-      { name: 'Xiaolongbao', desc: 'Ravioli cinesi al vapore con brodino caldo all’interno.', img: '/photos/stock-xlb-01.jpg' },
-      { name: 'Ravioli di ombrina', desc: 'Sottile sfoglia e ripieno delicato di ombrina, cotti al vapore.', img: '/photos/stock-dumpling-03.jpg' },
-      { name: 'Ravioli di bovino allo zenzero', desc: 'Ripieno saporito con nota fresca di zenzero.', img: '/photos/stock-dumpling-02.jpg' },
-    ],
+    name: 'Ravioli allo zenzero',
+    desc: 'Ombrina o bovino. I più citati nelle recensioni.',
+    img: '/photos/menu-ravioli-classic.jpg',
+    tag: 'best seller',
   },
   {
-    id: 'noodles',
-    label: 'Noodles & Ramen',
-    dishes: [
-      { name: 'Zha Jiang Mian', desc: 'Noodles conditi con salsa di soia fermentata e verdure.', img: '/photos/stock-noodle-01.jpg' },
-      { name: 'Ramen di mare', desc: 'Brodo intenso e sapori del mare, cucinato a regola d’arte.', img: '/photos/stock-ramen-01.jpg' },
-      { name: 'Pho', desc: 'Spaghetti di riso vietnamiti in un brodo profumato di manzo.', img: '/photos/stock-ramen-02.jpg' },
-    ],
+    name: 'Ravioli ai gamberi',
+    desc: 'Ripieno di gambero, preparati a mano ogni giorno.',
+    img: '/photos/menu-gamberi.jpg',
   },
   {
-    id: 'dimsum',
-    label: 'Dim Sum & Bao',
-    dishes: [
-      { name: 'Siumay Hong-Kong', desc: 'Ravioli aperti in stile cantonese, un classico della casa.', img: '/photos/stock-dimsum-01.jpg' },
-      { name: 'Dim sum della casa', desc: 'Selezione di dim sum artigianali, serviti al vapore.', img: '/photos/stock-dumpling-07.jpg' },
-      { name: 'Bao con cavolo fermentato', desc: 'Panino soffice al vapore con cavolo fermentato.', img: '/photos/stock-bao-02.jpg' },
-    ],
+    name: 'Bao al manzo',
+    desc: 'Morbididi fuori, croccanti dentro. Cavolo fermentato cinese.',
+    img: '/photos/menu-bao.jpg',
+    tag: 'firma',
   },
-];
-const active = categories[0].id;
+  {
+    name: 'Ramen',
+    desc: 'Brodo di mare, spaghetti freschi, la nostra firma più richiesta.',
+    img: '/photos/menu-ramen.jpg',
+  },
+  {
+    name: 'Sfoglia nera',
+    desc: 'Ravioli con pasta al nero di seppia. La nostra versione più fotografata.',
+    img: '/photos/ravioli-sfoglia-nera.jpg',
+  },
+  {
+    name: 'Noodles saltati',
+    desc: 'Spaghetti freschi, wok bollente, verdure croccanti.',
+    img: '/photos/menu-noodles.jpg',
+  },
+]
 ---
 
-<section id={id} class="relative w-full overflow-hidden bg-antracite py-24 md:py-32" data-st-section>
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="text-center">
-      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>Il nostro menù</span>
-      <h2 class="mt-4 font-anton text-[clamp(2rem,8vw,5rem)] uppercase leading-[1.05] text-crema" data-split>Dal vapore alla tavola</h2>
-      <p class="mx-auto mt-6 max-w-2xl font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-crema/60" data-reveal data-delay="0.2">
-        Ogni piatto nasce al vapore e arriva in tavola fumante. Scegli una categoria.
-      </p>
-    </div>
-
-    <!-- Tabs -->
-    <div class="mt-12 flex flex-wrap items-center justify-center gap-3" role="tablist" aria-label="Categorie del menù" data-reveal data-delay="0.3">
-      {categories.map((c, i) => (
-        <button
-          type="button"
-          role="tab"
-          id={`tab-${c.id}`}
-          aria-controls={`panel-${c.id}`}
-          aria-selected={active === c.id ? 'true' : 'false'}
-          data-menu-tab={c.id}
-          data-active={active === c.id ? 'true' : 'false'}
-          class="menu-tab touch-target rounded-full border px-6 py-3 font-poppins text-sm font-medium uppercase tracking-wider transition-all duration-300"
-        >
-          {c.label}
-        </button>
-      ))}
-    </div>
-
-    <!-- Panels -->
-    {categories.map((c) => (
-      <div
-        id={`panel-${c.id}`}
-        role="tabpanel"
-        aria-labelledby={`tab-${c.id}`}
-        data-menu-panel={c.id}
-        data-active={active === c.id ? 'true' : 'false'}
-        class="menu-panel mt-12"
-      >
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {c.dishes.map((d, i) => (
-            <article class="group relative overflow-hidden rounded-2xl" data-menu-dish>
-              <div class="relative aspect-[4/5] overflow-hidden">
-                <WatermarkImg
-                  src={d.img}
-                  alt={d.name}
-                  class="h-full w-full"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-nero/85 via-nero/20 to-transparent" aria-hidden="true"></div>
-                <div class="absolute inset-x-0 bottom-0 p-6">
-                  <h3 class="font-anton text-2xl uppercase leading-tight text-crema md:text-3xl">{d.name}</h3>
-                  <p class="mt-2 font-poppins text-sm leading-relaxed text-crema/70">{d.desc}</p>
-                </div>
-              </div>
-            </article>
-          ))}
+<section id="menu" class="bg-antracite">
+  <!-- desktop: interactive drag + scroll horizontal gallery -->
+  <div class="menu-desktop relative hidden lg:block" data-menu-desktop>
+    <div class="flex h-[100svh] flex-col justify-center overflow-hidden">
+      <div class="mb-8 flex items-end justify-between px-16">
+        <div>
+          <p class="text-xs uppercase tracking-[0.4em] text-ambra">Il menu</p>
+          <h2 class="mt-2 font-display text-5xl uppercase text-crema">Alcuni dei nostri piatti</h2>
         </div>
+        <p class="text-xs uppercase tracking-[0.3em] text-crema/40">trascina o scorri →</p>
       </div>
-    ))}
+      <div class="menu-track flex cursor-grab gap-12 px-16 will-change-transform active:cursor-grabbing" data-menu-track>
+        {
+          piatti.map((p, i) => (
+            <article class={`dish-card group relative w-[440px] shrink-0 select-none ${i % 2 ? 'mt-20' : ''}`} data-draggable>
+              <span class="absolute -top-3 left-4 z-10 bg-ambra px-3 py-1 text-[10px] font-medium uppercase tracking-[0.25em] text-antracite opacity-0 transition-opacity duration-300 group-hover:opacity-100">{p.tag}</span>
+              <div class="overflow-hidden rounded-sm shadow-2xl">
+                <img
+                  src={p.img}
+                  alt={p.name}
+                  class="h-[400px] w-full object-cover transition-all duration-[900ms] ease-out group-hover:scale-[1.06]"
+                  loading="lazy"
+                  draggable="false"
+                />
+              </div>
+              <h3 class="mt-6 font-display text-3xl uppercase tracking-wide text-crema transition-colors duration-300 group-hover:text-ambra">{p.name}</h3>
+              <p class="mt-2 max-w-xs text-sm leading-relaxed text-crema/60">{p.desc}</p>
+            </article>
+          ))
+        }
+      </div>
+      <div class="mt-10 px-16">
+        <div class="menu-progress h-px w-full bg-crema/15"><div class="menu-progress-fill h-full origin-left scale-x-0 bg-ambra"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile: swipeable snap carousel -->
+  <div class="py-20 lg:hidden">
+    <div class="px-6">
+      <p class="text-xs uppercase tracking-[0.4em] text-ambra">Il menu</p>
+      <h2 class="mt-2 font-display text-4xl uppercase text-crema">Alcuni dei nostri piatti</h2>
+    </div>
+    <div class="menu-swipe mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {
+        piatti.map((p) => (
+          <article class="w-[80vw] shrink-0 snap-center">
+            <img src={p.img} alt={p.name} class="aspect-[4/5] w-full rounded-sm object-cover" loading="lazy" draggable="false" />
+            <h3 class="mt-4 font-display text-2xl uppercase text-crema">{p.name}</h3>
+            <p class="mt-1 text-sm text-crema/60">{p.desc}</p>
+          </article>
+        ))
+      }
+    </div>
   </div>
 </section>
 
-<style is:global>
-  .menu-tab {
-    color: #F8EADB;
-    border-color: rgba(248, 234, 219, 0.2);
-    background: transparent;
-  }
-  .menu-tab:hover {
-    border-color: rgba(219, 147, 74, 0.6);
-    color: #DB934A;
-  }
-  .menu-tab[data-active="true"] {
-    background: #DB934A;
-    border-color: #DB934A;
-    color: #222228;
-  }
-  .menu-panel[data-active="false"] {
-    display: none;
-  }
-</style>
-
 <script>
-  // Tabs menu — mostra/nasconde i pannelli e anima le card con GSAP.
-  (function () {
-    const tabs = document.querySelectorAll('[data-menu-tab]');
-    const panels = document.querySelectorAll('[data-menu-panel]');
-    if (!tabs.length) return;
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    const reduced = (window as any).__reduced
+    if (reduced) return
 
-    function activate(id) {
-      tabs.forEach((t) => {
-        const on = t.dataset.menuTab === id;
-        t.dataset.active = String(on);
-        t.setAttribute('aria-selected', String(on));
-      });
-      panels.forEach((p) => {
-        const on = p.dataset.menuPanel === id;
-        p.dataset.active = String(on);
-        if (on) {
-          // anima le card del pannello attivo
-          const cards = p.querySelectorAll('[data-menu-dish]');
-          if (window.gsap && !window.__reduced) {
-            gsap.fromTo(cards, { opacity: 0, y: 30 }, {
-              opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out',
-            });
-          } else {
-            cards.forEach((c) => (c.style.opacity = 1));
-          }
+    // desktop: scroll-driven horizontal pan + drag interaction + progress bar
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 1024px)', () => {
+      const track = document.querySelector('[data-menu-track]') as HTMLElement
+      if (!track) return
+
+      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth + 128)
+      const tween = gsap.to(track, {
+        x: () => -distance(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '[data-menu-desktop]',
+          start: 'top top',
+          end: () => `+=${distance()}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self: any) => {
+            gsap.set('.menu-progress-fill', { scaleX: self.progress })
+          },
+        },
+      })
+
+      // drag to explore (adds velocity, feels physical)
+      let isDown = false, startX = 0, startScroll = 0
+      const st = tween.scrollTrigger!
+      track.addEventListener('pointerdown', (e) => {
+        isDown = true; startX = e.clientX; startScroll = st.scroll ?? window.scrollY
+      })
+      window.addEventListener('pointermove', (e) => {
+        if (!isDown) return
+        const delta = e.clientX - startX
+        if (Math.abs(delta) > 4) {
+          const lenis = (window as any).lenis
+          const target = startScroll - delta * (distance() / window.innerWidth) * 1.2
+          if (lenis) lenis.scrollTo(target, { immediate: true })
+          else window.scrollTo(0, target)
         }
-      });
-    }
+      })
+      window.addEventListener('pointerup', () => (isDown = false))
 
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => activate(tab.dataset.menuTab));
-    });
-  })();
+      document.querySelectorAll('[data-menu-desktop] img').forEach((img) => {
+        if (!(img as HTMLImageElement).complete)
+          ;(img as HTMLImageElement).addEventListener('load', () => ScrollTrigger.refresh(), { once: true })
+      })
+    })
+  })
 </script>

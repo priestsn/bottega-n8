@@ -1,46 +1,36 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Preloader from '../components/Preloader.astro';
-import Navbar from '../components/Navbar.astro';
-import ScrollEight from '../components/ScrollEight.astro';
-import Vapor from '../components/Vapor.astro';
-import VaporTransition from '../components/VaporTransition.astro';
-import Hero from '../components/sections/Hero.astro';
-import Storia from '../components/sections/Storia.astro';
-import Marquee from '../components/Marquee.astro';
-import Filosofia from '../components/sections/Filosofia.astro';
-import Menu from '../components/sections/Menu.astro';
-import Locale from '../components/sections/Locale.astro';
-import Galleria from '../components/Galleria.astro';
-import TavoloTakeaway from '../components/sections/TavoloTakeaway.astro';
-import Stampa from '../components/sections/Stampa.astro';
-import DoveSiamo from '../components/sections/DoveSiamo.astro';
-import Chiusura from '../components/sections/Chiusura.astro';
----
+import Layout from '../layouts/Layout.astro'
+import Preloader from '../components/Preloader.astro'
+import SiteHeader from '../components/SiteHeader.astro'
+import Hero from '../components/sections/Hero.astro'
+import Storia from '../components/sections/Storia.astro'
+import Filosofia from '../components/sections/Filosofia.astro'
+import Menu from '../components/sections/Menu.astro'
+import Galleria from '../components/Galleria.astro'
+import TavoloTakeaway from '../components/sections/TavoloTakeaway.astro'
+import Stampa from '../components/sections/Stampa.astro'
+import DoveSiamo from '../components/sections/DoveSiamo.astro'
+import Chiusura from '../components/sections/Chiusura.astro'
+import ScrollEight from '../components/ScrollEight.astro'
+import WowPack from '../components/WowPack.astro'
+import SteamDivider from '../components/SteamDivider.astro'
 
+---
 <Layout>
   <Preloader />
-  <Navbar />
+  <SiteHeader />
   <ScrollEight />
-
-  <Hero id="hero" />
-  <!-- Transizione chiave: vapore che sale da Hero a Storia (unico passaggio scrub+blur) -->
-  <div class="bg-nero" aria-hidden="true"><VaporTransition targetSectionId="storia" /></div>
-  <Storia id="storia" />
-  <Marquee />
-  <Filosofia id="filosofia" />
-  <Menu id="menu" />
-  <!-- Divisore di vapore tra il menù (scuro) e il locale (chiaro) -->
-  <div class="bg-antracite" aria-hidden="true"><Vapor variant="divider" tone="light" density={2} /></div>
-  <!-- Il locale (foto interne reali) tra il menù e la galleria -->
-  <Locale id="locale" />
-  <!-- Divisore di vapore tra il locale (scuro) e Galleria (scuro) -->
-  <div class="bg-antracite" aria-hidden="true"><Vapor variant="divider" tone="light" density={4} /></div>
+  <WowPack />
+  <Hero />
+  <Storia />
+  <SteamDivider />
+  <Filosofia />
+  <Menu />
+  <SteamDivider />
   <Galleria />
-  <TavoloTakeaway id="tavolo-takeaway" />
-  <Stampa id="stampa" />
-  <!-- Divisore di vapore tra Stampa (chiaro) e DoveSiamo (antracite) -->
-  <div class="bg-crema" aria-hidden="true"><Vapor variant="divider" tone="dark" density={2} /></div>
-  <DoveSiamo id="dove-siamo" />
-  <Chiusura id="chiusura" />
+  <TavoloTakeaway />
+  <SteamDivider />
+  <Stampa />
+  <DoveSiamo />
+  <Chiusura />
 </Layout>

@@ -1,66 +1,80 @@
 ---
-interface Props { id?: string; }
-const { id = 'tavolo-takeaway' } = Astro.props;
+// Tavolo v3: split-screen pinned — tavolo vs take away, la scelta si "taglia" con lo scroll
 ---
 
-<section id={id} class="relative w-full overflow-hidden bg-crema py-24 md:py-32" data-st-section>
-
-  <div class="relative z-10 mx-auto w-full max-w-7xl px-6">
-    <div class="mx-auto max-w-3xl text-center">
-      <span class="font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>Due modi di vivere Bottega N.8</span>
-      <h2 class="mt-4 font-anton text-[clamp(2.2rem,6vw,4.5rem)] uppercase text-antracite" data-reveal data-delay="0.1">Tavolo o take away</h2>
-      <p class="mt-6 font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-antracite/70" data-reveal data-delay="0.2">
-        Un menù da vivere al tavolo o da portare con te. Che sia una pausa veloce o una cena da condividere, Bottega N.8 ti accoglie al tavolo o ti accompagna a casa.
-      </p>
-      <p class="mt-4 font-poppins text-[clamp(0.95rem,2vw,1.1rem)] font-medium uppercase tracking-widest text-ambra" data-reveal data-delay="0.3">La stessa cura, in ogni piatto.</p>
-    </div>
-
-    <div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10">
-      <!-- Tavolo -->
-      <div class="flex flex-col justify-between rounded-3xl border border-antracite/10 bg-bianco p-8 md:p-10" data-reveal>
-        <div>
-          <span class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-ambra/15 text-ambra" aria-hidden="true">
-            <svg class="h-7 w-7" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <!-- Tavolo (geometria OTTO: cerchio + forchetta/cucchiaio) -->
-              <circle cx="24" cy="14" r="7" />
-              <path d="M24 21v20" />
-              <path d="M24 33c-5 0-8-3-8-8" opacity="0.7" />
-            </svg>
-          </span>
-          <h3 class="mt-6 font-anton text-3xl uppercase text-antracite">Prenota un tavolo</h3>
-          <p class="mt-4 font-poppins text-base leading-relaxed text-antracite/70">
-            Siediti, rilassati, lascia che la cucina arrivi a te. L'atmosfera, il servizio, la condivisione.
-          </p>
-        </div>
-        <a href="tel:035297334" data-magnetic="0.3" class="magnetic tap-press touch-target inline-flex items-center justify-center gap-2 rounded-xl bg-antracite px-6 py-4 font-poppins text-base font-medium text-crema transition-colors hover:bg-nero">
-          <span class="magnetic-inner">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Chiama: 035 297 334
-          </span>
+<section id="tavolo" class="relative bg-crema text-antracite">
+  <div class="tavolo-stage relative flex h-[100svh] overflow-hidden" data-tavolo>
+    <!-- metà sinistra: tavolo -->
+    <div class="tavolo-half absolute inset-y-0 left-0 w-full overflow-hidden" data-half="tavolo">
+      <img src="/photos/interno-2.jpg" alt="La sala di Bottega N.8" class="h-full w-full object-cover" loading="lazy" data-living />
+      <div class="absolute inset-0 bg-antracite/55"></div>
+      <div class="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-crema">
+        <p class="text-xs uppercase tracking-[0.4em] text-ambra">Sera</p>
+        <h3 class="mt-3 font-display text-5xl uppercase sm:text-7xl" data-chars>Al tavolo</h3>
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-crema/80">
+          Cena lenta da condividere. Ravioli fatti a mano, piatti che arrivano quando sono pronti.
+        </p>
+        <a href="tel:+390****7334" class="magnetic mt-8 bg-ambra px-8 py-3 font-display text-xs uppercase tracking-[0.25em] text-antracite transition-transform duration-300">
+          035 297 334
         </a>
       </div>
-
-      <!-- Take away -->
-      <div class="flex flex-col justify-between rounded-3xl bg-antracite p-8 md:p-10" data-reveal data-delay="0.15">
-        <div>
-          <span class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-ambra/15 text-ambra" aria-hidden="true">
-            <svg class="h-7 w-7" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <!-- Take away (borsa, linea ambra) -->
-              <path d="M12 16h24l-2 24H14z" />
-              <path d="M18 16v-3a6 6 0 0 1 12 0v3" opacity="0.7" />
-              <path d="M16 24h16" opacity="0.5" />
-            </svg>
-          </span>
-          <h3 class="mt-6 font-anton text-3xl uppercase text-crema">Ordina take away</h3>
-          <p class="mt-4 font-poppins text-base leading-relaxed text-crema/70">
-            La stessa qualità, dove vuoi tu. Ritrova i sapori Bottega N.8 a casa tua.
-          </p>
-        </div>
-        <div class="mt-8 flex flex-col gap-3">
-          <a href="tel:035297334" data-magnetic="0.3" class="magnetic touch-target inline-flex items-center justify-center rounded-xl bg-ambra px-6 py-4 font-poppins text-base font-medium text-nero transition-colors hover:bg-ambra/90"><span class="magnetic-inner">Ordina al telefono: 035 297 334</span></a>
-          <p class="text-center font-poppins text-xs leading-relaxed text-crema/50">Preparazione e ritiro direttamente in bottega. Passa a trovarci o chiamaci per l'ordine.</p>
-        </div>
+    </div>
+    <!-- metà destra: take away (slide-in sopra) -->
+    <div class="tavolo-half absolute inset-y-0 right-0 w-1/2 overflow-hidden" data-half="takeaway">
+    <img
+      src="/photos/takeaway-borsa.jpg"
+      alt="Sacchetto take away Bottega N.8"
+      class="h-full w-full object-cover"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-antracite/45"></div>
+      <div class="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-crema">
+        <p class="text-xs uppercase tracking-[0.4em] text-ambra">Pausa</p>
+        <h3 class="mt-3 font-display text-5xl uppercase sm:text-7xl" data-chars>Take away</h3>
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-crema/80">
+          La stessa cura, da portare via. Su Deliveroo e Glovo, o direttamente in bottega.
+        </p>
+        <span class="mt-8 border border-crema/40 px-8 py-3 font-display text-xs uppercase tracking-[0.25em] text-crema">
+          Deliveroo · Glovo
+        </span>
       </div>
     </div>
+
+    <p class="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap font-display text-lg uppercase tracking-[0.25em] text-crema/90 mix-blend-difference md:block">
+      La stessa cura, in ogni piatto.
+    </p>
   </div>
 </section>
+
+<script>
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    const reduced = (window as any).__reduced
+    if (reduced) return
+
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 768px)', () => {
+      // takeaway entra coprendo metà schermo, poi entrambe le metà si restringono a "portale"
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '[data-tavolo]',
+          start: 'top top',
+          end: '+=160%',
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+        },
+      })
+      tl.fromTo('[data-half="takeaway"]', { width: '100%' }, { width: '50%', duration: 1, ease: 'power2.inOut' }, 0)
+        .fromTo('[data-half="takeaway"]', { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: 1, ease: 'power2.inOut' }, 0)
+    })
+
+    // mobile: semplice stack
+    mm.add('(max-width: 767px)', () => {
+      gsap.set('[data-half="takeaway"]', { position: 'relative', width: '100%', height: '100svh', clipPath: 'none' })
+      gsap.set('[data-half="tavolo"]', { position: 'relative', height: '100svh' })
+      gsap.set('.tavolo-stage', { display: 'block', height: 'auto' })
+    })
+  })
+</script>

@@ -1,0 +1,124 @@
+---
+// Wow-pack globale: custom cursor magnetico + scroll-velocity skew + char-split titles
+---
+
+<div id="cursor-dot" class="pointer-events-none fixed left-0 top-0 z-[90] hidden h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ambra mix-blend-difference md:block" style="transition: width .25s, height .25s"></div>
+
+<script>
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    const reduced = (window as any).__reduced
+    if (reduced || !gsap) return
+
+    // ---- 1. Custom cursor: dot che segue con lerp e cresce sugli interattivi
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const dot = document.getElementById('cursor-dot')!
+      const pos = { x: innerWidth / 2, y: innerHeight / 2 }
+      const target = { ...pos }
+      window.addEventListener('mousemove', (e) => {
+        target.x = (e as MouseEvent).clientX
+        target.y = (e as MouseEvent).clientY
+      })
+      gsap.ticker.add(() => {
+        pos.x += (target.x - pos.x) * 0.18
+        pos.y += (target.y - pos.y) * 0.18
+        dot.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`
+      })
+      const grow = () => { dot.style.width = '56px'; dot.style.height = '56px'; dot.style.opacity = '0.35' }
+      const shrink = () => { dot.style.width = '12px'; dot.style.height = '12px'; dot.style.opacity = '1' }
+      document.querySelectorAll('a, button, [data-draggable], figure').forEach((el) => {
+        el.addEventListener('mouseenter', grow)
+        el.addEventListener('mouseleave', shrink)
+      })
+    }
+
+    // ---- 2. Char-split sui titoli delle sezioni statiche (storia, tavolo, stampa, chiusura)
+    document.querySelectorAll('[data-chars]').forEach((el) => {
+      const raw = el.textContent?.trim() ?? ''
+      el.setAttribute('aria-label', raw)
+      el.textContent = ''
+      raw.split(' ').forEach((word, wi, arr) => {
+        const wrap = document.createElement('span')
+        wrap.className = 'inline-block whitespace-nowrap'
+        ;(word as string).split('').forEach((ch) => {
+          const s = document.createElement('span')
+          s.className = 'char inline-block will-change-transform'
+          s.textContent = ch
+          s.setAttribute('aria-hidden', 'true')
+          wrap.appendChild(s)
+        })
+        el.appendChild(wrap)
+        if (wi < arr.length - 1) el.appendChild(document.createTextNode(' '))
+      })
+
+      const chars = el.querySelectorAll('.char')
+      gsap.fromTo(
+        chars,
+        { yPercent: 110, opacity: 0, rotateX: -60 },
+        {
+          yPercent: 0,
+          opacity: 1,
+          rotateX: 0,
+          duration: 0.9,
+          ease: 'power4.out',
+          stagger: 0.028,
+          scrollTrigger: { trigger: el, start: 'top 82%', once: true },
+        }
+      )
+    })
+
+    // ---- 3. Scroll-velocity skew su galleria e menu track (feels alive)
+    let proxy = { skew: 0 }
+    const skewSetter = gsap.quickSetter('[data-skew]', 'skewY', 'deg')
+    const clamp = gsap.utils.clamp(-6, 6)
+    ScrollTrigger.create({
+      onUpdate: (self: any) => {
+        const v = clamp(self.getVelocity() / -350)
+        if (Math.abs(v) > Math.abs(proxy.skew)) {
+          proxy.skew = v
+          gsap.to(proxy, {
+            skew: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            overwrite: true,
+            onUpdate: () => skewSetter(proxy.skew),
+          })
+        }
+      },
+    })
+
+    // ---- 4. Magnetic buttons (tavolo, chiusura CTA)
+    if (window.matchMedia('(pointer: fine)').matches) {
+      document.querySelectorAll('.magnetic').forEach((btn) => {
+        const b = btn as HTMLElement
+        b.addEventListener('mousemove', (e) => {
+          const r = b.getBoundingClientRect()
+          gsap.to(b, {
+            x: (e.clientX - r.left - r.width / 2) * 0.3,
+            y: (e.clientY - r.top - r.height / 2) * 0.4,
+            duration: 0.4,
+            ease: 'power2.out',
+          })
+        })
+        b.addEventListener('mouseleave', () =>
+          gsap.to(b, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' })
+        )
+      })
+    }
+
+    // ---- 5. Ken Burns "foto vive" (b-roll sostitutivo del video)
+    document.querySelectorAll('[data-living]').forEach((img, i) => {
+      gsap.fromTo(
+        img,
+        { scale: 1.15, xPercent: i % 2 ? -3 : 3 },
+        {
+          scale: 1.02,
+          xPercent: i % 2 ? 0 : 0,
+          ease: 'none',
+          scrollTrigger: { trigger: img.closest('section'), start: 'top bottom', end: 'bottom top', scrub: 1.2 },
+        }
+      )
+    })
+  })
+</script>

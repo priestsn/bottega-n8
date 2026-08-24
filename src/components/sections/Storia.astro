@@ -1,47 +1,92 @@
 ---
-interface Props { id?: string; }
-const { id = 'storia' } = Astro.props;
-const storiaImg = '/photos/stock-chef-01.jpg';
-import WatermarkImg from '../WatermarkImg.astro';
+// Storia v3: foto "viva" con Ken Burns + parallasse, testo con char-reveal, numero otto animato
 ---
 
-<section id={id} class="relative w-full overflow-hidden bg-crema" data-st-section>
-
-  <div class="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-0 px-0 py-0 md:grid-cols-2">
-    <!-- Text -->
-    <div class="flex flex-col justify-center px-6 py-16 md:px-12 md:py-24 lg:px-20">
-      <span class="mb-6 inline-flex items-center gap-3 font-poppins text-xs uppercase tracking-[0.3em] text-ambra" data-reveal>
-        <span class="h-px w-10 bg-ambra"></span> La nostra storia
-      </span>
-
-      <h2 class="max-w-xl font-anton text-[clamp(2rem,6vw,4rem)] leading-[1.05] text-antracite opacity-0" data-split>
+<section id="storia" class="relative overflow-hidden bg-crema text-antracite">
+  <div class="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-6 py-24 md:grid-cols-2 md:gap-20 md:py-40" data-reveal-group>
+    <div class="relative flex items-center">
+      <div class="storia-img relative h-[540px] w-full overflow-hidden rounded-sm shadow-2xl">
+        <img
+          src="/photos/chef-cuoca.jpg"
+          alt="La cuoca al lavoro sui ravioli — Bottega N.8"
+          class="h-full w-full object-cover will-change-transform"
+          loading="lazy"
+          data-living
+        />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-antracite/30 to-transparent opacity-60"></div>
+        <p class="absolute bottom-4 left-4 font-display text-6xl leading-none text-crema/90 mix-blend-overlay">八</p>
+      </div>
+      <!-- badge rotante -->
+      <div class="otto-badge absolute -right-5 -top-5 hidden h-28 w-28 md:block" data-spin>
+        <svg viewBox="0 0 100 100" class="h-full w-full animate-[spin_18s_linear_infinite]">
+          <defs>
+            <path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+          </defs>
+          <text class="fill-antracite/70" style="font-size: 10.5px; letter-spacing: 3px; text-transform: uppercase;">
+            <textPath href="#circ">bottega n.8 · bergamo · dal 2025 ·</textPath>
+          </text>
+        </svg>
+        <span class="absolute inset-0 flex items-center justify-center font-display text-xl text-ambra">8</span>
+      </div>
+    </div>
+    <div class="flex flex-col justify-center">
+      <p class="mb-3 text-xs uppercase tracking-[0.4em] text-ambra">La nostra storia</p>
+      <h2 class="font-display text-4xl uppercase leading-tight sm:text-5xl lg:text-6xl" data-chars>
         Un equilibrio di culture e sapori
       </h2>
-
-      <div class="mt-8 max-w-lg space-y-5 font-poppins text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed text-antracite/80">
-        <p data-reveal data-delay="0.2">
-          Nel cuore di Bergamo, in via Maffei, nasce Bottega N.8: un ristorante e take away che unisce artigianalità italiana e ispirazione orientale in chiave contemporanea.
-        </p>
-        <p data-reveal data-delay="0.3">
-          Guidato da uno chef con anni di esperienza e una passione per l'incontro tra mondi diversi, Bottega N.8 reinterpreta la cucina orientale con sensibilità italiana e spirito moderno.
-        </p>
+      <p class="mt-8 text-base leading-relaxed text-antracite/80 sm:text-lg" data-reveal>
+        Nel cuore di Bergamo, in via Maffei, nasce Bottega N.8: artigianalità italiana
+        e ispirazione orientale in chiave contemporanea.
+      </p>
+      <p class="mt-5 text-sm leading-relaxed text-antracite/70 sm:text-base" data-reveal>
+        Guidato da uno chef con anni di esperienza internazionale, reinterpreta la cucina
+        orientale con sensibilità italiana e spirito moderno.
+      </p>
+      <div class="otto-note mt-10 grid grid-cols-3 gap-6 border-t border-antracite/15 pt-6" data-counters>
+        <div>
+          <p class="font-display text-3xl text-ambra"><span data-count-to="48">0</span>+</p>
+          <p class="mt-1 text-[10px] uppercase tracking-[0.2em] text-antracite/60">Ravioli a mano al giorno</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl text-ambra"><span data-count-to="4">0</span>,8★</p>
+          <p class="mt-1 text-[10px] uppercase tracking-[0.2em] text-antracite/60">Google Reviews</p>
+        </div>
+        <div class="flex items-end gap-3">
+          <span class="font-display text-4xl text-ambra">八</span>
+          <p class="text-xs leading-relaxed tracking-wide text-antracite/60">
+            L'otto richiama la <em>prosperità</em>. Ruotato, diventa infinito.
+          </p>
+        </div>
       </div>
-
-      <div class="mt-10 h-px w-24 bg-ambra" data-reveal data-delay="0.4"></div>
-    </div>
-
-    <!-- Image -->
-    <div class="relative order-first min-h-[50svh] md:order-last" data-clip-reveal>
-      <div class="absolute inset-0 h-full w-full">
-        <WatermarkImg
-          src={storiaImg}
-          alt="Due chef al lavoro nella cucina di Bottega N.8, tra vapore e preparazioni"
-          class="absolute inset-0 h-full w-full"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <div class="absolute inset-0 bg-gradient-to-t from-nero/30 to-transparent md:bg-gradient-to-r" aria-hidden="true"></div>
     </div>
   </div>
 </section>
+
+<script>
+  window.addEventListener('site:ready', () => {
+    const gsap = (window as any).gsap
+    const ScrollTrigger = (window as any).ScrollTrigger
+    const reduced = (window as any).__reduced
+    if (reduced) return
+
+    // parallax profondo sulla foto (dentro il frame)
+    gsap.fromTo('.storia-img img', { yPercent: -8, scale: 1.15 }, {
+      yPercent: 8,
+      scale: 1.02,
+      ease: 'none',
+      scrollTrigger: { trigger: '#storia', start: 'top bottom', end: 'bottom top', scrub: true },
+    })
+
+    // counters
+    document.querySelectorAll('[data-count-to]').forEach((el) => {
+      const target = parseFloat(el.getAttribute('data-count-to')!)
+      gsap.fromTo(el, { textContent: 0 }, {
+        textContent: target,
+        duration: 1.8,
+        ease: 'power2.out',
+        snap: { textContent: el.getAttribute('data-count-to') === '4' ? 0.1 : 1 },
+        scrollTrigger: { trigger: '[data-counters]', start: 'top 85%', once: true },
+      })
+    })
+  })
+</script>

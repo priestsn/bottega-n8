@@ -1,65 +1,98 @@
 ---
-import '../styles/global.css';
-import CustomCursor from '../components/CustomCursor.astro';
-import Grain from '../components/Grain.astro';
-import SkinSwitcher from '../components/SkinSwitcher.astro';
+import '../styles/global.css'
+import '@fontsource/anton'
+import '@fontsource/poppins/400.css'
+import '@fontsource/poppins/500.css'
+
+const { title = 'Bottega N.8 — Un viaggio di gusto, senza lasciare la città' } = Astro.props
 ---
 
 <!doctype html>
-<html lang="it" data-skin="crema">
+<html lang="it">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://bottegan8.it/" />
-    <title>Bottega N.8 — Un viaggio di gusto, senza lasciare la città</title>
-    <meta name="description" content="Bottega N.8: ristorante e take away a Bergamo. Artigianalità italiana e ispirazione orientale in chiave contemporanea. Via Clara Maffei 8, 24121 Bergamo." />
-    <meta name="theme-color" content="#222228" />
-    <meta property="og:title" content="Bottega N.8 — Un viaggio di gusto, senza lasciare la città" />
-    <meta property="og:description" content="Ristorante e take away a Bergamo. Artigianalità italiana e ispirazione orientale contemporanea." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://bottegan8.it/" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content="Bottega N.8, ristorante e take away a Bergamo. Artigianalità italiana e ispirazione orientale in chiave contemporanea. Via Clara Maffei 8." />
+    <link rel="icon" type="image/svg+xml" href="/logo-light.png" />
+    <meta property="og:title" content="Bottega N.8 — Bergamo" />
+    <meta property="og:description" content="Artigianalità italiana e ispirazione orientale. Assapora, condividi, ripeti." />
     <meta property="og:image" content="/og-image.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Bottega N.8 — Un viaggio di gusto, senza lasciare la città" />
-    <meta name="twitter:description" content="Ristorante e take away a Bergamo. Artigianalità italiana e ispirazione orientale contemporanea." />
-    <meta name="twitter:image" content="https://bottegan8.it/og-image.jpg" />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Restaurant",
-      "name": "Bottega N.8",
-      "description": "Ristorante e take away che unisce artigianalità italiana e ispirazione orientale in chiave contemporanea.",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Via Clara Maffei 8",
-        "addressLocality": "Bergamo",
-        "postalCode": "24121",
-        "addressCountry": "IT"
-      },
-      "telephone": "+39 035 297 334",
-      "servesCuisine": "Asiatica contemporanea",
-      "priceRange": "€€",
-      "image": "https://bottegan8.it/og-image.jpg",
-      "hasMenu": "https://bottegan8.it/#menu",
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 45.6946631,
-        "longitude": 9.6751172
-      },
-      "sameAs": [
-        "https://www.instagram.com/bottegan8/"
-      ]
-    })} />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Bottega N.8",
+        "servesCuisine": "Asiatica contemporanea",
+        "telephone": "+39 035 297334",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Via Clara Maffei 8",
+          "postalCode": "24121",
+          "addressLocality": "Bergamo",
+          "addressCountry": "IT"
+        },
+        "priceRange": "€20–30"
+      }
+    </script>
   </head>
-  <body class="lenis lenis-smooth">
+  <body>
     <slot />
-    <Grain />
-    <CustomCursor />
-    <SkinSwitcher />
-    <script type="module">
-      import '../scripts/lenis-gsap.js';
+
+    <script>
+      import Lenis from 'lenis'
+      import gsap from 'gsap'
+      import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+      gsap.registerPlugin(ScrollTrigger)
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      window.__reduced = reduced
+
+      let lenis = null
+      if (!reduced) {
+        lenis = new Lenis()
+        lenis.on('scroll', ScrollTrigger.update)
+        gsap.ticker.add((t) => lenis!.raf(t * 1000))
+        gsap.ticker.lagSmoothing(0)
+      }
+      // @ts-ignore expose for section scripts
+      window.gsap = gsap
+      window.ScrollTrigger = ScrollTrigger
+      window.lenis = lenis
+
+      // generic reveals: one trigger per [data-reveal-group], staggered children
+      function initReveals() {
+        document.querySelectorAll('[data-reveal-group]').forEach((group) => {
+          const items = group.querySelectorAll('[data-reveal]')
+          if (reduced || !items.length) {
+            items.forEach((el) => ((el as HTMLElement).style.opacity = '1'))
+            return
+          }
+          gsap.fromTo(
+            items,
+            { opacity: 0, y: 36 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: 'power2.out',
+              stagger: 0.14,
+              scrollTrigger: { trigger: group, start: 'top 78%', once: true },
+            }
+          )
+        })
+      }
+
+      initReveals()
+      window.addEventListener('astro:page-load', initReveals)
+      window.dispatchEvent(new CustomEvent('site:ready'))
     </script>
   </body>
 </html>
+
+<style is:global>
+  html {
+    background: #222228;
+  }
+</style>
