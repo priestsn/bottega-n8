@@ -26,9 +26,14 @@
           </h2>
         ))
       }
-      <p class="filo-intro absolute inset-x-0 bottom-[7%] mx-auto max-w-md px-8 text-sm leading-relaxed tracking-wide text-crema/70" data-filo-intro style="opacity: 0">
-        Ogni proposta racconta un incontro tra culture, esperienze e sapori.
-      </p>
+      <!-- finale coerente col ritmo: carattere cinese gigante + parola, stile peaceput -->
+      <div class="filo-final absolute inset-x-0 top-1/2 -translate-y-1/2 text-center" data-filo-final style="opacity: 0">
+        <p class="cn-giant select-none font-display leading-none" style="font-size: clamp(6rem, 22vw, 16rem); color: #DB934A; -webkit-text-stroke: 0;" aria-hidden="true">和</p>
+        <p class="mt-4 font-display uppercase tracking-[0.3em] text-crema" style="font-size: clamp(1.4rem, 4vw, 3rem);">armonia</p>
+        <p class="mx-auto mt-4 max-w-md px-8 text-sm leading-relaxed tracking-wide text-crema/70" data-filo-intro-copy>
+          Ogni proposta racconta un incontro tra culture, esperienze e sapori.
+        </p>
+      </div>
     </div>
 
     <div class="filo-dots absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 gap-2">
@@ -74,6 +79,8 @@
         if (i > 0) el.style.marginTop = '1rem'
       })
       document.querySelector('[data-filo-intro]')?.setAttribute('style', 'position:static; margin-top:2rem')
+      const fin = document.querySelector('[data-filo-final]') as HTMLElement | null
+      if (fin) { fin.style.position = 'static'; fin.style.opacity = '1'; fin.style.marginTop = '2rem'; fin.style.transform = 'none' }
       return
     }
 
@@ -100,8 +107,8 @@
       tl.to(words[i - 1], { opacity: 0, scale: 1.06, filter: 'blur(6px)', duration: 0.7 }, i * 2)
       tl.fromTo(words[i], { opacity: 0, scale: 0.92, filter: 'blur(8px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.7 }, i * 2 + 0.5)
     }
-    tl.fromTo('[data-filo-intro]', { opacity: 0 }, { opacity: 1, duration: 0.6 }, words.length * 2 - 0.5)
-    // l'ultima parola esce quando arriva l'intro: niente sovrapposizione
+    tl.fromTo('[data-filo-final]', { opacity: 0, scale: 0.94, filter: 'blur(8px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8 }, words.length * 2 - 0.5)
+    // l'ultima parola esce quando arriva il finale: niente sovrapposizione
     tl.to(words[words.length - 1], { opacity: 0, scale: 1.06, filter: 'blur(6px)', duration: 0.6 }, words.length * 2 - 0.5)
 
     // subtle parallax on the backdrop photo

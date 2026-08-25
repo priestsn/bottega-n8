@@ -14,11 +14,34 @@
     />
   </a>
   <nav class="flex items-center gap-5 text-[11px] uppercase tracking-[0.3em] text-crema/70">
-    <a href="#menu" class="hidden transition-colors hover:text-ambra md:inline">Menu</a>
-    <a href="#galleria" class="hidden transition-colors hover:text-ambra md:inline">Galleria</a>
+    <a href="#menu" class="hover-slide hidden md:inline" data-text="Menu"><span>Menu</span></a>
+    <a href="#galleria" class="hover-slide hidden md:inline" data-text="Galleria"><span>Galleria</span></a>
     <a href="tel:+39035297334" class="bg-ambra px-4 py-2 font-display text-[11px] uppercase tracking-[0.25em] text-antracite transition-transform duration-300 hover:-translate-y-0.5">Prenota</a>
   </nav>
 </header>
+
+<style is:global>
+  /* hover slide stile peaceput: il testo esce verso l'alto e rientra da sotto */
+  .hover-slide {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .hover-slide > span {
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .hover-slide::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    transform: translateY(100%);
+    color: #db934a;
+    transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .hover-slide:hover > span { transform: translateY(-100%); }
+  .hover-slide:hover::after { transform: translateY(0); }
+</style>
 
 <script>
   window.addEventListener('preloader:done', () => {

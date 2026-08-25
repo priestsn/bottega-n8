@@ -108,5 +108,27 @@
     document.querySelectorAll('.steam-layer').forEach((el, i) => {
       gsap.to(el, { backgroundPositionX: `${i % 2 ? '-' : ''}${260 + i * 110}px`, duration: 18 + i * 7, repeat: -1, yoyo: true, ease: 'sine.inOut' })
     })
+
+    // ⚔️ FIX tagli netti: ogni divider deve fondersi con le sezioni adiacenti.
+    // I bordi del divider stesso ricevono una maschera morbida + overlay gradiente
+    // dal colore della sezione sopra (top) e sotto (bottom), così non c'è mai una linea.
+    document.querySelectorAll('#steam-divider').forEach((divider) => {
+      const d = divider as HTMLElement
+
+      // maschera sul contenitore: sfuma gli estremi del divider
+      d.style.maskImage = 'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)'
+      d.style.webkitMaskImage = 'linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)'
+
+      // overlay gradienti: top fonde col colore della sezione precedente, bottom con la successiva
+      const from = d.style.getPropertyValue('--from-color') || '#222228'
+      const to = d.style.getPropertyValue('--to-color') || '#222228'
+      const ovTop = document.createElement('div')
+      ovTop.className = 'pointer-events-none absolute inset-x-0 top-0 h-[30%]'
+      ovTop.style.background = `linear-gradient(to bottom, ${from}, transparent)`
+      const ovBot = document.createElement('div')
+      ovBot.className = 'pointer-events-none absolute inset-x-0 bottom-0 h-[30%]'
+      ovBot.style.background = `linear-gradient(to top, ${to}, transparent)`
+      d.prepend(ovTop, ovBot)
+    })
   })
 </script>
