@@ -15,21 +15,40 @@
 
     <div class="relative z-10 w-full text-center">
       {
-        ['equilibrio', 'autenticità', 'armonia', 'creatività'].map((w, i) => (
-          <h2
-            class={`filo-word absolute inset-x-0 top-1/2 -translate-y-1/2 font-display uppercase text-crema ${i === 3 ? 'text-ambra' : ''}`}
-            style={`font-size: clamp(2.4rem, ${w.length > 10 ? '9vw' : '13vw'}, 8rem);`}
+        // concept peaceput applicato ai VALORI: ogni valore = carattere cinese
+        // gigante (che ne è la traduzione) + parola italiana, sopra il video vapore
+        [
+          { cn: '衡', it: 'equilibrio' },
+          { cn: '真', it: 'autenticità' },
+          { cn: '和', it: 'armonia' },
+          { cn: '創', it: 'creatività' },
+        ].map((w, i) => (
+          <div
+            class={`filo-word absolute inset-x-0 top-1/2 -translate-y-1/2 ${i === 0 ? '' : 'opacity-0'}`}
             data-filo-word
             data-filo-offset={i}
           >
-            {w}
-          </h2>
+            <p
+              class={`cn-giant select-none font-display leading-none ${i === 3 ? 'text-ambra' : 'text-crema'}`}
+              style={`font-size: clamp(7rem, 26vw, 18rem); -webkit-text-stroke: 2px #DB934A; -webkit-text-fill-color: transparent;`}
+              aria-hidden="true"
+              data-cn-giant
+            >
+              {w.cn}
+            </p>
+            <h2
+              class={`mt-3 font-display uppercase tracking-[0.12em] ${i === 3 ? 'text-ambra' : 'text-crema'}`}
+              style={`font-size: clamp(1.6rem, 5.5vw, 4rem);`}
+            >
+              {w.it}
+            </h2>
+          </div>
         ))
       }
       <!-- finale coerente col ritmo: carattere cinese gigante + parola, stile peaceput -->
       <div class="filo-final absolute inset-x-0 top-1/2 -translate-y-1/2 text-center" data-filo-final style="opacity: 0">
-        <p class="cn-giant select-none font-display leading-none" style="font-size: clamp(6rem, 22vw, 16rem); color: #DB934A; -webkit-text-stroke: 0;" aria-hidden="true">和</p>
-        <p class="mt-4 font-display uppercase tracking-[0.3em] text-crema" style="font-size: clamp(1.4rem, 4vw, 3rem);">armonia</p>
+        <p class="cn-giant select-none font-display leading-none" style="font-size: clamp(6rem, 22vw, 16rem); color: #DB934A; -webkit-text-stroke: 0;" aria-hidden="true">手作</p>
+        <p class="mt-4 font-display uppercase tracking-[0.3em] text-crema" style="font-size: clamp(1.4rem, 4vw, 3rem);">fatto a mano</p>
         <p class="mx-auto mt-4 max-w-md px-8 text-sm leading-relaxed tracking-wide text-crema/70" data-filo-intro-copy>
           Ogni proposta racconta un incontro tra culture, esperienze e sapori.
         </p>
