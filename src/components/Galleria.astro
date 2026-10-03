@@ -1,20 +1,21 @@
 ---
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 // Galleria v3: due marquee contrapposti + foto vive (Ken Burns) intercalate
 const rigaA = [
-  '/photos/interno-1.jpg',
-  '/photos/menu-dip.jpg',
-  '/photos/bao-croccanti.jpg',
-  '/photos/broll-2.png',
-  '/photos/interno-3.jpg',
-  '/photos/menu-noodles.jpg',
+  `${base}photos/interno-1.jpg`,
+  `${base}photos/menu-dip.jpg`,
+  `${base}photos/bao-croccanti.jpg`,
+  `${base}photos/broll-2.png`,
+  `${base}photos/interno-3.jpg`,
+  `${base}photos/menu-noodles.jpg`,
 ]
 const rigaB = [
-  '/photos/takeaway-borsa.jpg',
-  '/photos/ravioli-sfoglia-nera.jpg',
-  '/photos/broll-1.png',
-  '/photos/interno-4.jpg',
-  '/photos/menu-bao-aperto.jpg',
-  '/photos/menu-te.jpg',
+  `${base}photos/takeaway-borsa.jpg`,
+  `${base}photos/ravioli-sfoglia-nera.jpg`,
+  `${base}photos/broll-1.png`,
+  `${base}photos/interno-4.jpg`,
+  `${base}photos/menu-bao-aperto.jpg`,
+  `${base}photos/menu-te.jpg`,
 ]
 ---
 

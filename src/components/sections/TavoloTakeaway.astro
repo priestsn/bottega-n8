@@ -1,4 +1,5 @@
 ---
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 // Tavolo v3: split-screen pinned — tavolo vs take away, la scelta si "taglia" con lo scroll
 ---
 
@@ -6,7 +7,7 @@
   <div class="tavolo-stage relative flex h-[100svh] overflow-hidden" data-tavolo>
     <!-- metà sinistra: tavolo -->
     <div class="tavolo-half absolute inset-y-0 left-0 w-full overflow-hidden" data-half="tavolo">
-      <img src="/photos/interno-2.jpg" alt="La sala di Bottega N.8" class="h-full w-full object-cover" loading="lazy" data-living />
+      <img src={`${base}photos/interno-2.jpg`} alt="La sala di Bottega N.8" class="h-full w-full object-cover" loading="lazy" data-living />
       <div class="absolute inset-0 bg-antracite/55"></div>
       <div class="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-crema">
         <p class="text-xs uppercase tracking-[0.4em] text-ambra">Sera</p>
@@ -22,7 +23,7 @@
     <!-- metà destra: take away (slide-in sopra) -->
     <div class="tavolo-half absolute inset-y-0 right-0 w-1/2 overflow-hidden" data-half="takeaway">
     <img
-      src="/photos/takeaway-borsa.jpg"
+      src={`${base}photos/takeaway-borsa.jpg`}
       alt="Sacchetto take away Bottega N.8"
       class="h-full w-full object-cover"
       loading="lazy"

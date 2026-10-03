@@ -1,4 +1,5 @@
 ---
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 // Preloader v5: mask SVG UNICA (il video vive dentro la stessa maschera del
 // tratto, niente clip-path CSS disallineati). Contatore legato al caricamento
 // reale delle risorse critiche. Fallback anti-blocco 5s.
@@ -8,7 +9,7 @@
   <video
     class="preloader-video absolute inset-0 h-full w-full object-cover"
     style="opacity: 0.25"
-    src="/photos/hero-video.mp4"
+    src={`${base}photos/hero-video.mp4`}
     autoplay muted loop playsinline preload="auto"
   ></video>
   <div class="absolute inset-0 bg-antracite/60"></div>
@@ -32,7 +33,7 @@
       <!-- video dentro l'infinito, visibile solo attraverso la maschera -->
       <foreignObject x="0" y="0" width="200" height="100" mask="url(#pp-inf-mask)">
         <video xmlns="http://www.w3.org/1999/xhtml"
-          src="/photos/hero-video.mp4"
+          src={`${base}photos/hero-video.mp4`}
           autoplay muted loop playsinline preload="auto"
           style="width: 200px; height: 100px; object-fit: cover; opacity: 0.9;"
         ></video>
@@ -78,9 +79,12 @@
 
     // --- contatore REALE: progresso su risorse critiche (max 2s di attesa) ---
     let progress = 0
+    const BASE = import.meta.env.BASE_URL.endsWith('/')
+      ? import.meta.env.BASE_URL
+      : import.meta.env.BASE_URL + '/'
     const critical = [
-      '/photos/hero-video.mp4',
-      '/photos/logo-light.png',
+      BASE + 'photos/hero-video.mp4',
+      BASE + 'photos/logo-light.png',
     ]
     let loaded = 0
     const bump = () => {

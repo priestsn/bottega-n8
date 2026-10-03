@@ -1,36 +1,37 @@
 ---
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const piatti = [
   {
     name: 'Ravioli allo zenzero',
     desc: 'Ombrina o bovino. I più citati nelle recensioni.',
-    img: '/photos/menu-ravioli-classic.jpg',
+    img: `${base}photos/menu-ravioli-classic.jpg`,
     tag: 'best seller',
   },
   {
     name: 'Ravioli ai gamberi',
     desc: 'Ripieno di gambero, preparati a mano ogni giorno.',
-    img: '/photos/menu-gamberi.jpg',
+    img: `${base}photos/menu-gamberi.jpg`,
   },
   {
     name: 'Bao al manzo',
     desc: 'Morbididi fuori, croccanti dentro. Cavolo fermentato cinese.',
-    img: '/photos/menu-bao.jpg',
+    img: `${base}photos/menu-bao.jpg`,
     tag: 'firma',
   },
   {
     name: 'Ramen',
     desc: 'Brodo di mare, spaghetti freschi, la nostra firma più richiesta.',
-    img: '/photos/menu-ramen.jpg',
+    img: `${base}photos/menu-ramen.jpg`,
   },
   {
     name: 'Sfoglia nera',
     desc: 'Ravioli con pasta al nero di seppia. La nostra versione più fotografata.',
-    img: '/photos/ravioli-sfoglia-nera.jpg',
+    img: `${base}photos/ravioli-sfoglia-nera.jpg`,
   },
   {
     name: 'Noodles saltati',
     desc: 'Spaghetti freschi, wok bollente, verdure croccanti.',
-    img: '/photos/menu-noodles.jpg',
+    img: `${base}photos/menu-noodles.jpg`,
   },
 ]
 ---

@@ -1,4 +1,5 @@
 ---
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 // Storia v3: foto "viva" con Ken Burns + parallasse, testo con char-reveal, numero otto animato
 ---
 
@@ -7,7 +8,7 @@
     <div class="relative flex items-center">
       <div class="storia-img relative h-[540px] w-full overflow-hidden rounded-sm shadow-2xl">
         <img
-          src="/photos/interno-4.jpg"
+          src={`${base}photos/interno-4.jpg`}
           alt="La sala di Bottega N.8 — Via Clara Maffei 8, Bergamo"
           class="h-full w-full object-cover will-change-transform"
           loading="lazy"
