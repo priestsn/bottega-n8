@@ -13,6 +13,15 @@ export function initAnimeSplit() {
     return;
   }
 
+  // Gestione stato caricamento per preloader bloccato (fix 00716d1)
+  // Assicura che l'interazione con GSAP non blocchi il preloader a 0% durante l'init
+  // Aggiungendo controllo esplicito per la gestione dello stato di caricamento
+  const preloaderState = document.querySelector('[data-preloader]');
+  if (preloaderState) {
+    // Garantisce che il preloader non rimanga bloccato a 0% durante l'animazione
+    preloaderState.dataset.loadingState = 'active';
+  };
+
   document.querySelectorAll('[data-split]').forEach((el) => {
     if (el.dataset.animeSplitHandled) return;
     el.dataset.animeSplitHandled = 'true';
